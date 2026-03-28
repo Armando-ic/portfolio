@@ -31,3 +31,28 @@ canvas {
   z-index: 1;
   pointer-events: none;
 }
+
+.scroll-hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #64748b;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  z-index: 10;
+  animation: pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.scroll-hint-chevron {
+  margin-top: 4px;
+  font-size: 1rem;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.5; transform: translateX(-50%) translateY(5px); }
+}
