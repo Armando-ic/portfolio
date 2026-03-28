@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import Lighting from './scene/Lighting'
 import Ocean from './scene/Ocean'
+import Boat from './scene/Boat'
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       >
         <Lighting />
         <Ocean />
+        <Boat />
       </Canvas>
     </>
   )
