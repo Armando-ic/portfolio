@@ -7,22 +7,33 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const PATH_POINTS = [
-  new THREE.Vector3(0, 3, 10),       // Start: above water, looking at the boat
+  // Surface approach
+  new THREE.Vector3(0, 3, 10),       // Start: above water
   new THREE.Vector3(0, 1.5, 5),      // Approaching the boat
-  new THREE.Vector3(0, 0.5, 2.5),    // Right next to the boat, almost at water level
-  new THREE.Vector3(0.5, 0, 1.5),    // At the boat, water surface
-  new THREE.Vector3(1, -1, 1),       // Slipping just below the surface
-  new THREE.Vector3(2, -4, 2),       // Descending under the boat
-  new THREE.Vector3(4, -8, 0),       // About coral zone (-8)
-  new THREE.Vector3(1, -14, -2),     // Transition
-  new THREE.Vector3(-2, -20, -1),    // Projects coral zone (-20)
-  new THREE.Vector3(0, -26, -3),     // Transition
-  new THREE.Vector3(3, -32, 0),      // Resume coral zone (-32)
-  new THREE.Vector3(1, -38, -2),     // Transition
-  new THREE.Vector3(-1, -44, -2),    // Certifications coral zone (-44)
-  new THREE.Vector3(0, -50, -1),     // Transition
-  new THREE.Vector3(1, -54, 2),      // Approaching Contact coral
-  new THREE.Vector3(1, -55, 1),      // At Contact coral — camera stops here, looks at coral
+  new THREE.Vector3(0, 0.5, 2.5),    // Right next to the boat
+  new THREE.Vector3(0.5, 0, 1.5),    // At water surface
+  new THREE.Vector3(0.5, -1, 1),     // Slipping below
+
+  // Gentle spiral descent — smooth S-curves
+  new THREE.Vector3(1.5, -3, 1),     // Easing into the dive
+  new THREE.Vector3(3, -5.5, 0),     // Curving toward About
+  new THREE.Vector3(4, -8, -1),      // About coral zone (-8)
+  new THREE.Vector3(3, -11, -2),     // Easing away from About
+  new THREE.Vector3(1, -14, -3),     // Gentle transition
+  new THREE.Vector3(-1, -17, -3),    // Curving toward Projects
+  new THREE.Vector3(-3, -20, -2),    // Projects coral zone (-20)
+  new THREE.Vector3(-2, -23, -1),    // Easing away from Projects
+  new THREE.Vector3(0, -26, 0),      // Gentle transition
+  new THREE.Vector3(2, -29, -1),     // Curving toward Resume
+  new THREE.Vector3(4, -32, -1),     // Resume coral zone (-32)
+  new THREE.Vector3(3, -35, -2),     // Easing away from Resume
+  new THREE.Vector3(1, -38, -3),     // Gentle transition
+  new THREE.Vector3(-1, -41, -3),    // Curving toward Certs
+  new THREE.Vector3(-2, -44, -3),    // Certifications coral zone (-44)
+  new THREE.Vector3(-1, -47, -2),    // Easing away from Certs
+  new THREE.Vector3(0, -50, -1),     // Gentle transition
+  new THREE.Vector3(1, -53, 0),      // Curving toward Contact
+  new THREE.Vector3(1, -55, 1),      // At Contact coral
 ]
 
 export default function CameraPath() {
@@ -31,7 +42,7 @@ export default function CameraPath() {
   const curveRef = useRef(null)
 
   useEffect(() => {
-    curveRef.current = new THREE.CatmullRomCurve3(PATH_POINTS, false, 'catmullrom', 0.5)
+    curveRef.current = new THREE.CatmullRomCurve3(PATH_POINTS, false, 'catmullrom', 0.3)
 
     const scrollTrigger = gsap.to(progressRef.current, {
       value: 1,
