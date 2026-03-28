@@ -2,8 +2,13 @@ import { Canvas } from '@react-three/fiber'
 import Lighting from './scene/Lighting'
 import Ocean from './scene/Ocean'
 import Boat from './scene/Boat'
+import Corals from './scene/Corals'
 
 export default function App() {
+  const handleCoralClick = (sectionId) => {
+    console.log('Coral clicked:', sectionId)
+  }
+
   return (
     <>
       <Canvas
@@ -13,6 +18,7 @@ export default function App() {
         <Lighting />
         <Ocean />
         <Boat />
+        <Corals onCoralClick={handleCoralClick} />
       </Canvas>
     </>
   )
