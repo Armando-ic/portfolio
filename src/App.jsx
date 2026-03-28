@@ -33,7 +33,7 @@ export default function App() {
   return (
     <>
       <Canvas
-        camera={{ position: [0, 2, 8], fov: 60, near: 0.1, far: 200 }}
+        camera={{ position: [0, 3, 10], fov: 60, near: 0.1, far: 200 }}
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
         <ReefScene onCoralClick={handleCoralClick} />

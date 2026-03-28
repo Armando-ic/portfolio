@@ -7,8 +7,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const PATH_POINTS = [
-  new THREE.Vector3(0, 2, 8),
-  new THREE.Vector3(2, -3, 4),
+  new THREE.Vector3(0, 3, 10),       // Start: above water, looking at the boat
+  new THREE.Vector3(0, 1.5, 5),      // Approaching the boat
+  new THREE.Vector3(0, 0.5, 2.5),    // Right next to the boat, almost at water level
+  new THREE.Vector3(0.5, 0, 1.5),    // At the boat, water surface
+  new THREE.Vector3(1, -1, 1),       // Slipping just below the surface
+  new THREE.Vector3(2, -2, 2),       // Descending under the boat
   new THREE.Vector3(4, -5, 1),
   new THREE.Vector3(1, -8, -1),
   new THREE.Vector3(-2, -12, -1),
@@ -35,7 +39,7 @@ export default function CameraPath() {
         trigger: '.scroll-track',
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.5,
+        scrub: 1,
       },
     })
 
@@ -54,7 +58,8 @@ export default function CameraPath() {
     const lookAheadProgress = Math.min(progress + 0.02, 1)
     const lookAt = curveRef.current.getPointAt(lookAheadProgress)
 
-    camera.position.lerp(point, 0.1)
+    // Set position directly — GSAP scrub handles all smoothing
+    camera.position.copy(point)
     camera.lookAt(lookAt)
   })
 
