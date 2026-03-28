@@ -56,10 +56,18 @@ export default function CameraPath() {
     const progress = progressRef.current.value
     const point = curveRef.current.getPointAt(progress)
 
-    // Look ahead on path, but at the very end look at the Contact coral
-    const lookAt = progress > 0.95
-      ? new THREE.Vector3(1, -56, -2)  // Contact coral position
-      : curveRef.current.getPointAt(Math.min(progress + 0.02, 0.98))
+    // Smoothly blend lookAt from "ahead on path" to "Contact coral" in the final stretch
+    const pathLookAt = curveRef.current.getPointAt(Math.min(progress + 0.02, 0.98))
+    const coralLookAt = new THREE.Vector3(1, -56, -2)  // Contact coral position
+
+    const lookAt = new THREE.Vector3()
+    if (progress > 0.85) {
+      // Blend: 0.85 = 100% path, 1.0 = 100% coral
+      const blend = (progress - 0.85) / 0.15
+      lookAt.lerpVectors(pathLookAt, coralLookAt, blend)
+    } else {
+      lookAt.copy(pathLookAt)
+    }
 
     // Set position directly — GSAP scrub handles all smoothing
     camera.position.copy(point)
