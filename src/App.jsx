@@ -11,7 +11,7 @@ export default function App() {
 
   useEffect(() => {
     document.body.style.overflow = 'auto'
-    document.body.style.height = '600vh'
+    document.body.style.height = '800vh'
     document.documentElement.style.overflow = 'auto'
 
     const hideHint = () => {
@@ -46,7 +46,7 @@ export default function App() {
         </div>
       )}
 
-      <div className="scroll-track" style={{ height: '600vh' }} />
+      <div className="scroll-track" style={{ height: '800vh' }} />
     </>
   )
 }

@@ -12,16 +12,16 @@ const PATH_POINTS = [
   new THREE.Vector3(0, 0.5, 2.5),    // Right next to the boat, almost at water level
   new THREE.Vector3(0.5, 0, 1.5),    // At the boat, water surface
   new THREE.Vector3(1, -1, 1),       // Slipping just below the surface
-  new THREE.Vector3(2, -2, 2),       // Descending under the boat
-  new THREE.Vector3(4, -5, 1),
-  new THREE.Vector3(1, -8, -1),
-  new THREE.Vector3(-2, -12, -1),
-  new THREE.Vector3(0, -16, -2),
-  new THREE.Vector3(3, -20, 0),
-  new THREE.Vector3(1, -24, -2),
-  new THREE.Vector3(-1, -28, -2),
-  new THREE.Vector3(0, -32, -1),
-  new THREE.Vector3(1, -35, 2),
+  new THREE.Vector3(2, -4, 2),       // Descending under the boat
+  new THREE.Vector3(4, -8, 0),       // About coral zone (-8)
+  new THREE.Vector3(1, -14, -2),     // Transition
+  new THREE.Vector3(-2, -20, -1),    // Projects coral zone (-20)
+  new THREE.Vector3(0, -26, -3),     // Transition
+  new THREE.Vector3(3, -32, 0),      // Resume coral zone (-32)
+  new THREE.Vector3(1, -38, -2),     // Transition
+  new THREE.Vector3(-1, -44, -2),    // Certifications coral zone (-44)
+  new THREE.Vector3(0, -50, -1),     // Transition
+  new THREE.Vector3(1, -56, 2),      // Contact coral zone (-56)
 ]
 
 export default function CameraPath() {
