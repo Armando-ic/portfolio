@@ -21,7 +21,8 @@ const PATH_POINTS = [
   new THREE.Vector3(1, -38, -2),     // Transition
   new THREE.Vector3(-1, -44, -2),    // Certifications coral zone (-44)
   new THREE.Vector3(0, -50, -1),     // Transition
-  new THREE.Vector3(1, -56, 2),      // Contact coral zone (-56)
+  new THREE.Vector3(1, -54, 2),      // Approaching Contact coral
+  new THREE.Vector3(1, -55, 1),      // At Contact coral — camera stops here, looks at coral
 ]
 
 export default function CameraPath() {
@@ -55,8 +56,10 @@ export default function CameraPath() {
     const progress = progressRef.current.value
     const point = curveRef.current.getPointAt(progress)
 
-    const lookAheadProgress = Math.min(progress + 0.02, 1)
-    const lookAt = curveRef.current.getPointAt(lookAheadProgress)
+    // Look ahead on path, but at the very end look at the Contact coral
+    const lookAt = progress > 0.95
+      ? new THREE.Vector3(1, -56, -2)  // Contact coral position
+      : curveRef.current.getPointAt(Math.min(progress + 0.02, 0.98))
 
     // Set position directly — GSAP scrub handles all smoothing
     camera.position.copy(point)
