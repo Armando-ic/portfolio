@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import Lighting from './scene/Lighting'
+import Ocean from './scene/Ocean'
 
 export default function App() {
   return (
@@ -9,10 +10,7 @@ export default function App() {
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
         <Lighting />
-        <mesh position={[0, 0, 0]}>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshStandardMaterial color="#ff6b9d" />
-        </mesh>
+        <Ocean />
       </Canvas>
     </>
   )
