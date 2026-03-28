@@ -25,9 +25,12 @@ const PATH_POINTS = [
   new THREE.Vector3(-2, -23, -1),    // Easing away from Projects
   new THREE.Vector3(0, -26, 0),      // Gentle transition
   new THREE.Vector3(2, -29, -1),     // Curving toward Resume
-  new THREE.Vector3(4, -32, -1),     // Resume coral zone (-32)
-  new THREE.Vector3(3, -35, -2),     // Easing away from Resume
-  new THREE.Vector3(1, -38, -3),     // Gentle transition
+  new THREE.Vector3(4, -31, -1),     // Approaching Resume from front
+  new THREE.Vector3(5, -32, -3),     // Sweeping to the side of Resume
+  new THREE.Vector3(4, -33, -5),     // Moving behind Resume
+  new THREE.Vector3(2, -34, -6),     // Behind Resume, looking back at it
+  new THREE.Vector3(1, -36, -5),     // Easing away from behind
+  new THREE.Vector3(0, -38, -4),     // Gentle transition
   new THREE.Vector3(-1, -41, -3),    // Curving toward Certs
   new THREE.Vector3(-2, -44, -3),    // Certifications coral zone (-44)
   new THREE.Vector3(-1, -47, -2),    // Easing away from Certs
