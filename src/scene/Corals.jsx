@@ -20,8 +20,8 @@ const CORAL_SECTIONS = [
     position: [6, -6, -16],
     color: '#a55eea',
     scale: 1.4,
-    model: null,
-    modelScale: 1,
+    model: '/models/coral-reef-kit/Coral Reef Set2.glb',
+    modelScale: 2,
   },
   {
     id: 'resume',
@@ -30,8 +30,8 @@ const CORAL_SECTIONS = [
     position: [-2, -6, -28],
     color: '#26de81',
     scale: 1.3,
-    model: null,
-    modelScale: 1,
+    model: '/models/coral-reef-kit/Coral Reef Set3.glb',
+    modelScale: 2,
   },
   {
     id: 'certifications',
@@ -40,8 +40,8 @@ const CORAL_SECTIONS = [
     position: [4, -6, -40],
     color: '#48dbfb',
     scale: 1.1,
-    model: null,
-    modelScale: 1,
+    model: '/models/coral-reef-kit/Coral Reef Set4.glb',
+    modelScale: 2,
   },
   {
     id: 'contact',
@@ -50,8 +50,8 @@ const CORAL_SECTIONS = [
     position: [-2, -6, -52],
     color: '#ff9f43',
     scale: 1.0,
-    model: null,
-    modelScale: 1,
+    model: '/models/coral-reef-kit/Coral Reef Set5.glb',
+    modelScale: 2,
   },
 ]
 
@@ -170,3 +170,7 @@ export default function Corals({ onCoralClick }) {
 
 // Preload models
 useGLTF.preload('/models/coral-reef-kit/Coral Reef Set.glb')
+useGLTF.preload('/models/coral-reef-kit/Coral Reef Set2.glb')
+useGLTF.preload('/models/coral-reef-kit/Coral Reef Set3.glb')
+useGLTF.preload('/models/coral-reef-kit/Coral Reef Set4.glb')
+useGLTF.preload('/models/coral-reef-kit/Coral Reef Set5.glb')
