@@ -18,22 +18,13 @@ export default function OverlayPanel({ activeSection, onClose, children }) {
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
-
-      // Block ALL window-level scroll so GSAP ScrollTrigger doesn't move the camera.
-      // The overlay-content div scrolls via its own overflow-y: auto (CSS),
-      // which is internal scrolling and doesn't affect window.scrollY.
-      const blockWindowScroll = (e) => {
-        e.preventDefault()
-      }
-      window.addEventListener('wheel', blockWindowScroll, { passive: false })
-      window.addEventListener('touchmove', blockWindowScroll, { passive: false })
       document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
 
       return () => {
         document.removeEventListener('keydown', handleEscape)
-        window.removeEventListener('wheel', blockWindowScroll)
-        window.removeEventListener('touchmove', blockWindowScroll)
         document.body.style.overflow = 'auto'
+        document.documentElement.style.overflow = 'auto'
       }
     }
     return () => {
