@@ -7,12 +7,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const PATH_POINTS = [
-  // Surface approach — start further back, swing wide around the boat
-  new THREE.Vector3(0, 4, 14),       // Start: further back, above water
-  new THREE.Vector3(0, 2.5, 8),      // Approaching the boat
-  new THREE.Vector3(1, 1, 5),        // Angling to the side of the boat
-  new THREE.Vector3(3, 0, 3),        // Passing beside the boat (not through it)
-  new THREE.Vector3(3, -1, 1),       // Slipping below, still to the side
+  // Surface approach — start far back, swing wide around the boat
+  new THREE.Vector3(0, 5, 18),       // Start: far back, above water
+  new THREE.Vector3(0, 3, 12),       // Approaching the boat
+  new THREE.Vector3(2, 1.5, 7),      // Angling to the side
+  new THREE.Vector3(5, 0, 4),        // Wide pass beside the boat
+  new THREE.Vector3(5, -1, 1),       // Below surface, well clear of hull
 
   // Gentle spiral descent — smooth S-curves
   new THREE.Vector3(2, -3, 0),       // Easing into the dive
