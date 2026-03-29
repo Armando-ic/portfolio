@@ -9,8 +9,8 @@ function Bubbles({ count = 40 }) {
   const particles = useMemo(() => {
     return Array.from({ length: count }, () => ({
       x: (Math.random() - 0.5) * 30,
-      y: -58 + Math.random() * 65,
-      z: (Math.random() - 0.5) * 30,
+      y: -7 + Math.random() * 12,
+      z: -55 + Math.random() * 70,
       speed: 0.2 + Math.random() * 0.5,
       wobble: Math.random() * Math.PI * 2,
       scale: 0.03 + Math.random() * 0.08,
@@ -20,7 +20,7 @@ function Bubbles({ count = 40 }) {
   useFrame(({ clock }) => {
     if (!meshRef.current) return
     particles.forEach((p, i) => {
-      const y = ((p.y + clock.elapsedTime * p.speed) % 65) - 58
+      const y = ((p.y + clock.elapsedTime * p.speed) % 12) - 7
       const x = p.x + Math.sin(clock.elapsedTime * 0.5 + p.wobble) * 0.3
       dummy.position.set(x, y, p.z)
       dummy.scale.setScalar(p.scale)
@@ -46,8 +46,8 @@ function Bubbles({ count = 40 }) {
 
 function OceanFloor() {
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -58, 0]} receiveShadow>
-      <planeGeometry args={[100, 100, 32, 32]} />
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -7, -25]} receiveShadow>
+      <planeGeometry args={[60, 120, 32, 32]} />
       <meshStandardMaterial
         color="#0a2a1a"
         roughness={0.9}
@@ -86,7 +86,7 @@ export default function Ocean() {
 
   useMemo(() => {
     scene.background = new THREE.Color('#001428')
-    scene.fog = new THREE.FogExp2('#001428', 0.015)
+    scene.fog = new THREE.FogExp2('#001428', 0.012)
   }, [scene])
 
   return (

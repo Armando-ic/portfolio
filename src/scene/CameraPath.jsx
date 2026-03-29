@@ -6,37 +6,37 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Shallow reef: descend to floor (~y=-6), then wind horizontally through the reef
 const PATH_POINTS = [
-  // Surface approach — straight descent behind the boat
-  new THREE.Vector3(0, 5, 18),       // Start: far back, above water
-  new THREE.Vector3(0, 3, 12),       // Approaching the boat
-  new THREE.Vector3(0, 1, 7),        // Getting closer, still behind
-  new THREE.Vector3(0, -1, 4),       // Dropping below surface, behind the boat
-  new THREE.Vector3(0, -3, 1),       // Under the boat, descending straight
+  // Surface — above water, looking at boat
+  new THREE.Vector3(0, 5, 18),
+  new THREE.Vector3(0, 3, 12),
+  new THREE.Vector3(0, 1, 7),
 
-  // Gentle curve toward About coral
-  new THREE.Vector3(1, -5, -1),      // Easing toward About
-  new THREE.Vector3(3, -6.5, -1),    // Curving toward About
-  new THREE.Vector3(4, -8, -1),      // About coral zone (-8)
-  new THREE.Vector3(3, -11, -2),     // Easing away from About
-  new THREE.Vector3(1, -14, -3),     // Gentle transition
-  new THREE.Vector3(-1, -17, -3),    // Curving toward Projects
-  new THREE.Vector3(-3, -20, -2),    // Projects coral zone (-20)
-  new THREE.Vector3(-2, -23, -1),    // Easing away from Projects
-  new THREE.Vector3(0, -26, 0),      // Gentle transition
-  new THREE.Vector3(2, -29, -1),     // Curving toward Resume
-  new THREE.Vector3(4, -31, -1),     // Approaching Resume from front
-  new THREE.Vector3(5, -32, -3),     // Sweeping to the side of Resume
-  new THREE.Vector3(4, -33, -5),     // Moving behind Resume
-  new THREE.Vector3(2, -34, -6),     // Behind Resume, looking back at it
-  new THREE.Vector3(1, -36, -5),     // Easing away from behind
-  new THREE.Vector3(0, -38, -4),     // Gentle transition
-  new THREE.Vector3(-1, -41, -3),    // Curving toward Certs
-  new THREE.Vector3(-2, -44, -3),    // Certifications coral zone (-44)
-  new THREE.Vector3(-1, -47, -2),    // Easing away from Certs
-  new THREE.Vector3(0, -50, -1),     // Gentle transition
-  new THREE.Vector3(1, -53, 0),      // Curving toward Contact
-  new THREE.Vector3(1, -55, 1),      // At Contact coral
+  // Descent to reef floor
+  new THREE.Vector3(0, -2, 3),
+  new THREE.Vector3(0, -4, -1),
+  new THREE.Vector3(1, -5.5, -4),       // About coral — first stop during descent
+
+  // Level out and begin horizontal winding path along the reef floor
+  new THREE.Vector3(2, -6, -8),
+  new THREE.Vector3(4, -6, -12),
+  new THREE.Vector3(5, -6, -16),        // Projects coral — right side of reef
+
+  // Curve left
+  new THREE.Vector3(4, -6, -20),
+  new THREE.Vector3(2, -6, -24),
+  new THREE.Vector3(-1, -6, -28),       // Resume coral — center-left
+
+  // Curve right
+  new THREE.Vector3(-2, -6, -32),
+  new THREE.Vector3(0, -6, -36),
+  new THREE.Vector3(3, -6, -40),        // Certifications coral — right side
+
+  // Curve left toward Contact
+  new THREE.Vector3(2, -6, -44),
+  new THREE.Vector3(0, -6, -48),
+  new THREE.Vector3(-2, -6, -52),       // Contact coral — end of reef trail
 ]
 
 export default function CameraPath() {
@@ -70,20 +70,18 @@ export default function CameraPath() {
     const progress = progressRef.current.value
     const point = curveRef.current.getPointAt(progress)
 
-    // Smoothly blend lookAt from "ahead on path" to "Contact coral" in the final stretch
+    // Look ahead on path; at the end, look at the Contact coral
+    const contactCoral = new THREE.Vector3(-2, -6, -52)
     const pathLookAt = curveRef.current.getPointAt(Math.min(progress + 0.02, 0.98))
-    const coralLookAt = new THREE.Vector3(1, -56, -2)  // Contact coral position
 
     const lookAt = new THREE.Vector3()
     if (progress > 0.85) {
-      // Blend: 0.85 = 100% path, 1.0 = 100% coral
       const blend = (progress - 0.85) / 0.15
-      lookAt.lerpVectors(pathLookAt, coralLookAt, blend)
+      lookAt.lerpVectors(pathLookAt, contactCoral, blend)
     } else {
       lookAt.copy(pathLookAt)
     }
 
-    // Set position directly — GSAP scrub handles all smoothing
     camera.position.copy(point)
     camera.lookAt(lookAt)
   })
