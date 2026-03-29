@@ -1,0 +1,150 @@
+/* === Custom Properties (theming) === */
+:root {
+  --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-primary);
+  --font-size-base: 11pt;
+  --font-size-h1: 20pt;
+  --font-size-h2: 12pt;
+  --font-size-small: 9pt;
+
+  --color-primary: #2a2a2a;
+  --color-accent: #0d9488;
+  --color-text: #333;
+  --color-text-light: #666;
+  --color-border: #ddd;
+  --color-bg: #fff;
+
+  --spacing-section: 1rem;
+  --spacing-item: 0.5rem;
+}
+
+/* === Reset === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Base Typography === */
+body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.4;
+}
+
+h1 { font-size: var(--font-size-h1); color: var(--color-primary); }
+h2 { font-size: var(--font-size-h2); color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--color-accent); padding-bottom: 0.2rem; margin-bottom: var(--spacing-item); }
+h3 { font-size: var(--font-size-base); color: var(--color-primary); }
+
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+ul { list-style-position: outside; padding-left: 1.2em; }
+li { margin-bottom: 0.2rem; }
+
+/* === Resume Layout === */
+.resume {
+  max-width: 8.5in;
+  margin: 0 auto;
+  padding: 0.5in;
+}
+
+.resume-section {
+  margin-bottom: var(--spacing-section);
+}
+
+/* === Contact Header === */
+#contact { text-align: center; margin-bottom: var(--spacing-section); }
+#contact h1 { margin-bottom: 0.3rem; }
+
+.contact-info {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: var(--font-size-small);
+  color: var(--color-text-light);
+}
+
+.contact-info a { color: var(--color-accent); }
+
+/* === Entry (shared by experience, education, projects) === */
+.entry { margin-bottom: var(--spacing-item); }
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.entry-date, .entry-meta {
+  font-size: var(--font-size-small);
+  color: var(--color-text-light);
+  white-space: nowrap;
+}
+
+.entry-subtitle {
+  font-style: italic;
+  color: var(--color-text-light);
+  margin-bottom: 0.2rem;
+}
+
+.entry-detail {
+  color: var(--color-text-light);
+  margin-bottom: 0.2rem;
+}
+
+.entry-links {
+  font-size: var(--font-size-small);
+  margin-bottom: 0.2rem;
+}
+
+/* === Skills Grid === */
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem 1.5rem;
+}
+
+.skill-category { font-size: var(--font-size-base); }
+
+/* === Certifications === */
+.cert-list { list-style: none; padding-left: 0; }
+.cert-list li { margin-bottom: 0.2rem; }
+
+/* === Print Styles === */
+@media print {
+  body { background: #fff; }
+
+  .resume {
+    max-width: none;
+    margin: 0;
+    padding: 0.4in;
+    box-shadow: none;
+  }
+
+  a { color: var(--color-text); text-decoration: none; }
+
+  .entry, .cert-list li, .skill-category {
+    break-inside: avoid;
+  }
+
+  .resume-section {
+    break-inside: avoid;
+  }
+
+  h2 { break-after: avoid; }
+}
+
+/* === Screen Styles === */
+@media screen {
+  body { background: #f0f0f0; padding: 2rem 1rem; }
+
+  .resume {
+    background: var(--color-bg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.06);
+    border-radius: 2px;
+  }
+}
