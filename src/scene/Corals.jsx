@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
+import { Html, useGLTF } from '@react-three/drei'
 
 const CORAL_SECTIONS = [
   {
@@ -10,6 +10,8 @@ const CORAL_SECTIONS = [
     position: [3, -8, -2],
     color: '#ff6b9d',
     scale: 1.2,
+    model: '/models/coral-reef-kit/Coral Reef Set.glb',
+    modelScale: 2,
   },
   {
     id: 'projects',
@@ -18,6 +20,8 @@ const CORAL_SECTIONS = [
     position: [-3, -20, -4],
     color: '#a55eea',
     scale: 1.4,
+    model: null,
+    modelScale: 1,
   },
   {
     id: 'resume',
@@ -26,6 +30,8 @@ const CORAL_SECTIONS = [
     position: [4, -32, -3],
     color: '#26de81',
     scale: 1.3,
+    model: null,
+    modelScale: 1,
   },
   {
     id: 'certifications',
@@ -34,6 +40,8 @@ const CORAL_SECTIONS = [
     position: [-2, -44, -5],
     color: '#48dbfb',
     scale: 1.1,
+    model: null,
+    modelScale: 1,
   },
   {
     id: 'contact',
@@ -42,8 +50,58 @@ const CORAL_SECTIONS = [
     position: [1, -56, -2],
     color: '#ff9f43',
     scale: 1.0,
+    model: null,
+    modelScale: 1,
   },
 ]
+
+function PlaceholderCoral({ section, hovered }) {
+  return (
+    <>
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.3, 0.6, section.scale * 2, 8]} />
+        <meshStandardMaterial
+          color={section.color}
+          emissive={section.color}
+          emissiveIntensity={hovered ? 0.4 : 0.1}
+          roughness={0.6}
+        />
+      </mesh>
+      <mesh position={[0.5, 0.3, 0.2]} rotation={[0, 0, 0.4]}>
+        <cylinderGeometry args={[0.1, 0.25, section.scale * 1.2, 6]} />
+        <meshStandardMaterial
+          color={section.color}
+          emissive={section.color}
+          emissiveIntensity={hovered ? 0.4 : 0.1}
+          roughness={0.6}
+        />
+      </mesh>
+      <mesh position={[-0.4, 0.2, -0.3]} rotation={[0, 0, -0.3]}>
+        <cylinderGeometry args={[0.15, 0.3, section.scale * 1.0, 6]} />
+        <meshStandardMaterial
+          color={section.color}
+          emissive={section.color}
+          emissiveIntensity={hovered ? 0.4 : 0.1}
+          roughness={0.6}
+        />
+      </mesh>
+      <mesh position={[0, section.scale, 0]}>
+        <sphereGeometry args={[0.4, 16, 16]} />
+        <meshStandardMaterial
+          color={section.color}
+          emissive={section.color}
+          emissiveIntensity={hovered ? 0.5 : 0.15}
+          roughness={0.5}
+        />
+      </mesh>
+    </>
+  )
+}
+
+function RealCoral({ model, modelScale }) {
+  const { scene } = useGLTF(model)
+  return <primitive object={scene.clone()} scale={modelScale} />
+}
 
 function CoralFormation({ section, onClick }) {
   const [hovered, setHovered] = useState(false)
@@ -63,46 +121,11 @@ function CoralFormation({ section, onClick }) {
       onPointerOut={() => { setHovered(false); document.body.style.cursor = 'default' }}
       onClick={(e) => { e.stopPropagation(); onClick(section.id) }}
     >
-      {/* Main coral body */}
-      <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.3, 0.6, section.scale * 2, 8]} />
-        <meshStandardMaterial
-          color={section.color}
-          emissive={section.color}
-          emissiveIntensity={hovered ? 0.4 : 0.1}
-          roughness={0.6}
-        />
-      </mesh>
-      {/* Coral branch 1 */}
-      <mesh position={[0.5, 0.3, 0.2]} rotation={[0, 0, 0.4]}>
-        <cylinderGeometry args={[0.1, 0.25, section.scale * 1.2, 6]} />
-        <meshStandardMaterial
-          color={section.color}
-          emissive={section.color}
-          emissiveIntensity={hovered ? 0.4 : 0.1}
-          roughness={0.6}
-        />
-      </mesh>
-      {/* Coral branch 2 */}
-      <mesh position={[-0.4, 0.2, -0.3]} rotation={[0, 0, -0.3]}>
-        <cylinderGeometry args={[0.15, 0.3, section.scale * 1.0, 6]} />
-        <meshStandardMaterial
-          color={section.color}
-          emissive={section.color}
-          emissiveIntensity={hovered ? 0.4 : 0.1}
-          roughness={0.6}
-        />
-      </mesh>
-      {/* Coral top sphere */}
-      <mesh position={[0, section.scale, 0]}>
-        <sphereGeometry args={[0.4, 16, 16]} />
-        <meshStandardMaterial
-          color={section.color}
-          emissive={section.color}
-          emissiveIntensity={hovered ? 0.5 : 0.15}
-          roughness={0.5}
-        />
-      </mesh>
+      {section.model ? (
+        <RealCoral model={section.model} modelScale={section.modelScale} />
+      ) : (
+        <PlaceholderCoral section={section} hovered={hovered} />
+      )}
 
       {/* Hover label */}
       {hovered && (
@@ -144,3 +167,6 @@ export default function Corals({ onCoralClick }) {
     </group>
   )
 }
+
+// Preload models
+useGLTF.preload('/models/coral-reef-kit/Coral Reef Set.glb')
