@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 
 const SECTION_TITLES = {
   about: { subtitle: 'Get to know me', title: 'About Me' },
@@ -15,14 +15,33 @@ export default function OverlayPanel({ activeSection, onClose, children }) {
     if (e.key === 'Escape') onClose()
   }, [onClose])
 
+  // Block scroll from leaking to the page (which moves the camera)
+  const handleWheel = useCallback((e) => {
+    e.stopPropagation()
+  }, [])
+
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
+      // Prevent all scroll on the page while overlay is open
+      const preventScroll = (e) => {
+        // Allow scroll inside the overlay panel itself
+        if (e.target.closest('.overlay-panel')) return
+        e.preventDefault()
+      }
+      window.addEventListener('wheel', preventScroll, { passive: false })
+      window.addEventListener('touchmove', preventScroll, { passive: false })
       document.body.style.overflow = 'hidden'
+
+      return () => {
+        document.removeEventListener('keydown', handleEscape)
+        window.removeEventListener('wheel', preventScroll)
+        window.removeEventListener('touchmove', preventScroll)
+        document.body.style.overflow = 'auto'
+      }
     }
     return () => {
       document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'auto'
     }
   }, [isOpen, handleEscape])
 
@@ -34,7 +53,7 @@ export default function OverlayPanel({ activeSection, onClose, children }) {
         className={`overlay-backdrop ${isOpen ? 'open' : ''}`}
         onClick={onClose}
       />
-      <div className={`overlay-panel ${isOpen ? 'open' : ''}`}>
+      <div className={`overlay-panel ${isOpen ? 'open' : ''}`} onWheel={handleWheel}>
         {sectionInfo && (
           <>
             <div className="overlay-header">
