@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useEffect, useCallback } from 'react'
 
 const SECTION_TITLES = {
   about: { subtitle: 'Get to know me', title: 'About Me' },
@@ -15,28 +15,24 @@ export default function OverlayPanel({ activeSection, onClose, children }) {
     if (e.key === 'Escape') onClose()
   }, [onClose])
 
-  // Block scroll from leaking to the page (which moves the camera)
-  const handleWheel = useCallback((e) => {
-    e.stopPropagation()
-  }, [])
-
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
-      // Prevent all scroll on the page while overlay is open
-      const preventScroll = (e) => {
-        // Allow scroll inside the overlay panel itself
-        if (e.target.closest('.overlay-panel')) return
+
+      // Block ALL window-level scroll so GSAP ScrollTrigger doesn't move the camera.
+      // The overlay-content div scrolls via its own overflow-y: auto (CSS),
+      // which is internal scrolling and doesn't affect window.scrollY.
+      const blockWindowScroll = (e) => {
         e.preventDefault()
       }
-      window.addEventListener('wheel', preventScroll, { passive: false })
-      window.addEventListener('touchmove', preventScroll, { passive: false })
+      window.addEventListener('wheel', blockWindowScroll, { passive: false })
+      window.addEventListener('touchmove', blockWindowScroll, { passive: false })
       document.body.style.overflow = 'hidden'
 
       return () => {
         document.removeEventListener('keydown', handleEscape)
-        window.removeEventListener('wheel', preventScroll)
-        window.removeEventListener('touchmove', preventScroll)
+        window.removeEventListener('wheel', blockWindowScroll)
+        window.removeEventListener('touchmove', blockWindowScroll)
         document.body.style.overflow = 'auto'
       }
     }
@@ -53,7 +49,7 @@ export default function OverlayPanel({ activeSection, onClose, children }) {
         className={`overlay-backdrop ${isOpen ? 'open' : ''}`}
         onClick={onClose}
       />
-      <div className={`overlay-panel ${isOpen ? 'open' : ''}`} onWheel={handleWheel}>
+      <div className={`overlay-panel ${isOpen ? 'open' : ''}`}>
         {sectionInfo && (
           <>
             <div className="overlay-header">
