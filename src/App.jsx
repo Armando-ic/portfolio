@@ -1,18 +1,39 @@
 import { useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import ReefScene from './scene/ReefScene'
+import OverlayPanel from './ui/OverlayPanel'
+import About from './content/About'
+import Projects from './content/Projects'
+import Resume from './content/Resume'
+import Certifications from './content/Certifications'
+import Contact from './content/Contact'
+
+const CONTENT_MAP = {
+  about: About,
+  projects: Projects,
+  resume: Resume,
+  certifications: Certifications,
+  contact: Contact,
+}
 
 export default function App() {
   const [scrollHintVisible, setScrollHintVisible] = useState(true)
+  const [activeSection, setActiveSection] = useState(null)
 
   const handleCoralClick = (sectionId) => {
-    console.log('Coral clicked:', sectionId)
+    setActiveSection(sectionId)
+  }
+
+  const handleClose = () => {
+    setActiveSection(null)
   }
 
   useEffect(() => {
-    document.body.style.overflow = 'auto'
-    document.body.style.height = '800vh'
-    document.documentElement.style.overflow = 'auto'
+    if (!activeSection) {
+      document.body.style.overflow = 'auto'
+      document.body.style.height = '800vh'
+      document.documentElement.style.overflow = 'auto'
+    }
 
     const hideHint = () => {
       if (window.scrollY > 50) {
@@ -23,12 +44,11 @@ export default function App() {
     window.addEventListener('scroll', hideHint)
 
     return () => {
-      document.body.style.overflow = ''
-      document.body.style.height = ''
-      document.documentElement.style.overflow = ''
       window.removeEventListener('scroll', hideHint)
     }
-  }, [])
+  }, [activeSection])
+
+  const ContentComponent = activeSection ? CONTENT_MAP[activeSection] : null
 
   return (
     <>
@@ -39,12 +59,16 @@ export default function App() {
         <ReefScene onCoralClick={handleCoralClick} />
       </Canvas>
 
-      {scrollHintVisible && (
+      {scrollHintVisible && !activeSection && (
         <div className="scroll-hint">
           <div>Scroll to Dive</div>
           <div className="scroll-hint-chevron">&#8744;</div>
         </div>
       )}
+
+      <OverlayPanel activeSection={activeSection} onClose={handleClose}>
+        {ContentComponent && <ContentComponent />}
+      </OverlayPanel>
 
       <div className="scroll-track" style={{ height: '800vh' }} />
     </>
