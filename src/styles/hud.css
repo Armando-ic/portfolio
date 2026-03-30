@@ -1,0 +1,48 @@
+.controls-hud {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 150;
+  background: rgba(0, 5, 15, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  animation: hud-fade-in 0.3s ease, hud-fade-out 0.5s ease 4.5s forwards;
+  pointer-events: none;
+}
+
+.controls-hud-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.controls-hud-row kbd {
+  display: inline-block;
+  min-width: 4rem;
+  text-align: center;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.7rem;
+  font-family: inherit;
+  color: #e2e8f0;
+  background: rgba(100, 116, 139, 0.2);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 4px;
+}
+
+@keyframes hud-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hud-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
