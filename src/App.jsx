@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import ReefScene from './scene/ReefScene'
 import OverlayPanel from './ui/OverlayPanel'
@@ -17,7 +17,6 @@ const CONTENT_MAP = {
 }
 
 export default function App() {
-  const [scrollHintVisible, setScrollHintVisible] = useState(true)
   const [activeSection, setActiveSection] = useState(null)
 
   const handleCoralClick = (sectionId) => {
@@ -28,49 +27,20 @@ export default function App() {
     setActiveSection(null)
   }
 
-  useEffect(() => {
-    if (!activeSection) {
-      document.body.style.overflow = 'auto'
-      document.body.style.height = '800vh'
-      document.documentElement.style.overflow = 'auto'
-    }
-
-    const hideHint = () => {
-      if (window.scrollY > 50) {
-        setScrollHintVisible(false)
-        window.removeEventListener('scroll', hideHint)
-      }
-    }
-    window.addEventListener('scroll', hideHint)
-
-    return () => {
-      window.removeEventListener('scroll', hideHint)
-    }
-  }, [activeSection])
-
   const ContentComponent = activeSection ? CONTENT_MAP[activeSection] : null
 
   return (
     <>
       <Canvas
-        camera={{ position: [0, 5, 18], fov: 60, near: 0.1, far: 200 }}
+        camera={{ position: [-309, 300, -4643], fov: 60, near: 1, far: 50000 }}
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
         <ReefScene onCoralClick={handleCoralClick} />
       </Canvas>
 
-      {scrollHintVisible && !activeSection && (
-        <div className="scroll-hint">
-          <div>Scroll to Dive</div>
-          <div className="scroll-hint-chevron">&#8744;</div>
-        </div>
-      )}
-
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}
       </OverlayPanel>
-
-      <div className="scroll-track" style={{ height: '800vh' }} />
     </>
   )
 }
