@@ -36,6 +36,18 @@ export default function FPSControls({ forestScene, onLockChange }) {
   const forward = useRef(new THREE.Vector3())
   const right = useRef(new THREE.Vector3())
   const moveDir = useRef(new THREE.Vector3())
+  const rayOrigin = useRef(new THREE.Vector3())
+
+  // Cache meshes when forest scene changes (avoid per-frame traverse)
+  const meshCache = useRef([])
+  useEffect(() => {
+    if (!forestScene) { meshCache.current = []; return }
+    const list = []
+    forestScene.traverse((child) => {
+      if (child.isMesh) list.push(child)
+    })
+    meshCache.current = list
+  }, [forestScene])
 
   // Key handlers
   useEffect(() => {
@@ -91,18 +103,11 @@ export default function FPSControls({ forestScene, onLockChange }) {
   const getGroundHeight = useCallback((x, z) => {
     if (!forestScene) return null
 
-    raycaster.current.set(
-      new THREE.Vector3(x, camera.position.y + RAY_ORIGIN_OFFSET, z),
-      rayDirection.current
-    )
+    rayOrigin.current.set(x, camera.position.y + RAY_ORIGIN_OFFSET, z)
+    raycaster.current.set(rayOrigin.current, rayDirection.current)
     raycaster.current.far = RAY_LENGTH + RAY_ORIGIN_OFFSET
 
-    const meshes = []
-    forestScene.traverse((child) => {
-      if (child.isMesh) meshes.push(child)
-    })
-
-    const intersects = raycaster.current.intersectObjects(meshes, false)
+    const intersects = raycaster.current.intersectObjects(meshCache.current, false)
     if (intersects.length > 0) {
       // Return the closest hit below the player (highest ground point)
       return intersects[0].point.y
