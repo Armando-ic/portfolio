@@ -10,7 +10,7 @@ const JUMP_FORCE = 250
 const GRAVITY = 600
 const EYE_HEIGHT = 100
 const BOUNDARY_RADIUS = 5500
-const MOUSE_SENSITIVITY = 0.002
+const POINTER_SPEED = 1.0 // multiplier on default sensitivity (1.0 = default)
 const PITCH_LIMIT = 85 * (Math.PI / 180) // 85 degrees in radians
 const BOUNDARY_CENTER = new THREE.Vector3(1835, 0, -260)
 
@@ -182,7 +182,7 @@ export default function FPSControls({ forestScene, onLockChange }) {
   return (
     <PointerLockControls
       ref={controlsRef}
-      pointerSpeed={MOUSE_SENSITIVITY}
+      pointerSpeed={POINTER_SPEED}
       minPolarAngle={Math.PI / 2 - PITCH_LIMIT}
       maxPolarAngle={Math.PI / 2 + PITCH_LIMIT}
       onLock={handleLock}
