@@ -9,15 +9,44 @@ const SPRINT_SPEED = 600
 const JUMP_FORCE = 250
 const GRAVITY = 600
 const EYE_HEIGHT = 200
-const MAX_STEP_HEIGHT = 80 // ignore ground hits more than this above current feet (prevents teleporting onto lamp posts)
+const PLAYER_RADIUS = 40 // horizontal collision radius
 const BOUNDARY_RADIUS = 5500
-const POINTER_SPEED = 1.0 // multiplier on default sensitivity (1.0 = default)
-const PITCH_LIMIT = 85 * (Math.PI / 180) // 85 degrees in radians
+const POINTER_SPEED = 1.0
+const PITCH_LIMIT = 85 * (Math.PI / 180)
 const BOUNDARY_CENTER = new THREE.Vector3(1835, 0, -260)
 
 // Raycasting
-const RAY_ORIGIN_OFFSET = 500 // cast from this far above the player
-const RAY_LENGTH = 2000       // max distance to search for ground
+const RAY_ORIGIN_OFFSET = 500
+const RAY_LENGTH = 2000
+const COLLISION_RAY_HEIGHT = 80 // cast horizontal rays from this height above feet
+
+// --- Mesh classification by name prefix ---
+// Passthrough: walk through these, ignore for all collision/ground
+const PASSTHROUGH_PREFIXES = ['Grass', 'Ronce', 'Champi', 'Pentacle', 'CampFire']
+// Trees: canopy is passthrough, but we rely on trunk geometry for collision
+// Arbre and tree nodes contain both trunk and canopy in one mesh, so we skip them
+// for ground raycast but include them in collision
+const TREE_PREFIXES = ['Arbre', 'tree']
+
+function classifyMesh(mesh) {
+  // Walk up the parent chain to find a named node
+  let node = mesh
+  while (node) {
+    const name = node.name || ''
+    // Check passthrough
+    for (const prefix of PASSTHROUGH_PREFIXES) {
+      if (name.startsWith(prefix)) return 'passthrough'
+    }
+    // Check tree
+    for (const prefix of TREE_PREFIXES) {
+      if (name.startsWith(prefix)) return 'tree'
+    }
+    // Ground mesh
+    if (name === 'Ground' || name.startsWith('Ground_')) return 'ground'
+    node = node.parent
+  }
+  return 'solid' // everything else: rocks, fences, walls, lanterns, buildings, etc.
+}
 
 export default function FPSControls({ forestScene, onLockChange }) {
   const controlsRef = useRef()
@@ -29,26 +58,44 @@ export default function FPSControls({ forestScene, onLockChange }) {
   const isGrounded = useRef(true)
   const lastGroundY = useRef(0)
 
-  // Raycaster for ground detection
-  const raycaster = useRef(new THREE.Raycaster())
-  const rayDirection = useRef(new THREE.Vector3(0, -1, 0))
+  // Raycasters
+  const groundRaycaster = useRef(new THREE.Raycaster())
+  const collisionRaycaster = useRef(new THREE.Raycaster())
+  const rayDown = useRef(new THREE.Vector3(0, -1, 0))
 
-  // Reusable vectors (avoid allocation per frame)
+  // Reusable vectors
   const forward = useRef(new THREE.Vector3())
   const right = useRef(new THREE.Vector3())
   const moveDir = useRef(new THREE.Vector3())
   const rayOrigin = useRef(new THREE.Vector3())
   const prevPosition = useRef(new THREE.Vector3())
+  const collisionOrigin = useRef(new THREE.Vector3())
+  const collisionDir = useRef(new THREE.Vector3())
 
-  // Cache meshes when forest scene changes (avoid per-frame traverse)
-  const meshCache = useRef([])
+  // Categorized mesh caches
+  const groundMeshes = useRef([])    // only Ground — for walking on
+  const solidMeshes = useRef([])     // rocks, fences, walls, etc — block movement
+  const allWalkable = useRef([])     // ground + solid (for ground raycast — walk on top of rocks too)
+
   useEffect(() => {
-    if (!forestScene) { meshCache.current = []; return }
-    const list = []
+    if (!forestScene) {
+      groundMeshes.current = []
+      solidMeshes.current = []
+      allWalkable.current = []
+      return
+    }
+    const ground = []
+    const solid = []
     forestScene.traverse((child) => {
-      if (child.isMesh) list.push(child)
+      if (!child.isMesh) return
+      const category = classifyMesh(child)
+      if (category === 'ground') ground.push(child)
+      else if (category === 'solid') solid.push(child)
+      // 'passthrough' and 'tree' meshes are excluded from both lists
     })
-    meshCache.current = list
+    groundMeshes.current = ground
+    solidMeshes.current = solid
+    allWalkable.current = [...ground, ...solid]
   }, [forestScene])
 
   // Key handlers
@@ -97,48 +144,60 @@ export default function FPSControls({ forestScene, onLockChange }) {
 
   const handleUnlock = useCallback(() => {
     if (onLockChange) onLockChange(false)
-    // Reset keys on unlock so player doesn't drift
     keys.current = { w: false, a: false, s: false, d: false, shift: false }
   }, [onLockChange])
 
-  // Ground raycast helper — finds the walkable surface, skipping roofs/canopies above
+  // Ground raycast — finds walkable surface below player
   const getGroundHeight = useCallback((x, z) => {
-    if (!forestScene) return null
+    if (allWalkable.current.length === 0) return null
 
     rayOrigin.current.set(x, camera.position.y + RAY_ORIGIN_OFFSET, z)
-    raycaster.current.set(rayOrigin.current, rayDirection.current)
-    raycaster.current.far = RAY_LENGTH + RAY_ORIGIN_OFFSET
+    groundRaycaster.current.set(rayOrigin.current, rayDown.current)
+    groundRaycaster.current.far = RAY_LENGTH + RAY_ORIGIN_OFFSET
 
-    const intersects = raycaster.current.intersectObjects(meshCache.current, false)
+    const intersects = groundRaycaster.current.intersectObjects(allWalkable.current, false)
     if (intersects.length === 0) return null
 
-    // Hits are sorted top-to-bottom (highest Y first).
-    // Find the highest surface that's within step range of our feet.
-    // This lets us walk UNDER lamp posts, trees, and roofs.
+    // Return the first hit below or near our feet (highest walkable surface)
     const feetY = camera.position.y - EYE_HEIGHT
-    const maxWalkableY = feetY + MAX_STEP_HEIGHT
-
     for (let i = 0; i < intersects.length; i++) {
-      if (intersects[i].point.y <= maxWalkableY) {
+      if (intersects[i].point.y <= feetY + 80) {
         return intersects[i].point.y
       }
     }
-
-    // All hits are above us (under a tall structure) — no walkable ground found
     return null
-  }, [forestScene, camera])
+  }, [camera])
+
+  // Horizontal collision check — returns true if movement is blocked
+  const checkCollision = useCallback((fromX, fromZ, toX, toZ) => {
+    if (solidMeshes.current.length === 0) return false
+
+    const dx = toX - fromX
+    const dz = toZ - fromZ
+    const dist = Math.sqrt(dx * dx + dz * dz)
+    if (dist < 0.001) return false
+
+    // Cast a ray from the old position toward the new position at chest height
+    const feetY = camera.position.y - EYE_HEIGHT
+    collisionOrigin.current.set(fromX, feetY + COLLISION_RAY_HEIGHT, fromZ)
+    collisionDir.current.set(dx / dist, 0, dz / dist)
+
+    collisionRaycaster.current.set(collisionOrigin.current, collisionDir.current)
+    collisionRaycaster.current.far = dist + PLAYER_RADIUS
+
+    const hits = collisionRaycaster.current.intersectObjects(solidMeshes.current, false)
+    return hits.length > 0 && hits[0].distance < dist + PLAYER_RADIUS
+  }, [camera])
 
   // Main movement loop
   useFrame((_, delta) => {
     if (!controlsRef.current?.isLocked) return
 
-    // Clamp delta to avoid huge jumps on tab-switch
     const dt = Math.min(delta, 0.1)
 
     // --- Horizontal movement ---
     const speed = keys.current.shift ? SPRINT_SPEED : MOVE_SPEED
 
-    // Get camera forward/right on XZ plane
     camera.getWorldDirection(forward.current)
     forward.current.y = 0
     forward.current.normalize()
@@ -151,23 +210,29 @@ export default function FPSControls({ forestScene, onLockChange }) {
     if (keys.current.a) moveDir.current.sub(right.current)
     if (keys.current.d) moveDir.current.add(right.current)
 
-    // Save position before moving (for reverting if we walk into void)
     prevPosition.current.copy(camera.position)
 
     if (moveDir.current.lengthSq() > 0) {
       moveDir.current.normalize()
-      camera.position.x += moveDir.current.x * speed * dt
-      camera.position.z += moveDir.current.z * speed * dt
+      const newX = camera.position.x + moveDir.current.x * speed * dt
+      const newZ = camera.position.z + moveDir.current.z * speed * dt
+
+      // Check horizontal collision with solid objects
+      if (!checkCollision(camera.position.x, camera.position.z, newX, newZ)) {
+        camera.position.x = newX
+        camera.position.z = newZ
+      }
+      // If blocked, position stays where it was (slide along wall not implemented)
     }
 
     // --- Boundary enforcement ---
-    const dx = camera.position.x - BOUNDARY_CENTER.x
-    const dz = camera.position.z - BOUNDARY_CENTER.z
-    const distFromCenter = Math.sqrt(dx * dx + dz * dz)
+    const bx = camera.position.x - BOUNDARY_CENTER.x
+    const bz = camera.position.z - BOUNDARY_CENTER.z
+    const distFromCenter = Math.sqrt(bx * bx + bz * bz)
     if (distFromCenter > BOUNDARY_RADIUS) {
       const scale = BOUNDARY_RADIUS / distFromCenter
-      camera.position.x = BOUNDARY_CENTER.x + dx * scale
-      camera.position.z = BOUNDARY_CENTER.z + dz * scale
+      camera.position.x = BOUNDARY_CENTER.x + bx * scale
+      camera.position.z = BOUNDARY_CENTER.z + bz * scale
     }
 
     // --- Vertical: gravity + ground detection ---
@@ -185,7 +250,7 @@ export default function FPSControls({ forestScene, onLockChange }) {
         isGrounded.current = true
       }
     } else {
-      // No ground found — revert to previous position (don't walk into void)
+      // No ground found — revert to previous position
       camera.position.x = prevPosition.current.x
       camera.position.z = prevPosition.current.z
       camera.position.y = prevPosition.current.y
