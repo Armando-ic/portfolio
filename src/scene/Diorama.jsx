@@ -12,24 +12,7 @@ export default function Diorama({ onSceneReady }) {
     })
   }, [actions])
 
-  // Adjust floating objects in the scene
-  useEffect(() => {
-    if (!scene) return
-
-    // Temple floats ~80 units above ground — lower so steps touch ground
-    const temple = scene.getObjectByName('Temple')
-    if (temple) temple.position.y -= 70
-
-    // rockset1 (large rock formation) floats ~380 units — lower to ground
-    const rockset = scene.getObjectByName('rockset1')
-    if (rockset) rockset.position.y -= 350
-
-    // pillar structure — slight float
-    const pillar = scene.getObjectByName('pillar')
-    if (pillar) pillar.position.y -= 10
-  }, [scene])
-
-  useEffect(() => {
+useEffect(() => {
     if (scene && onSceneReady) {
       onSceneReady(scene)
     }
