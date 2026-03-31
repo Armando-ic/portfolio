@@ -8,7 +8,8 @@ const MOVE_SPEED = 300
 const SPRINT_SPEED = 600
 const JUMP_FORCE = 250
 const GRAVITY = 600
-const EYE_HEIGHT = 100
+const EYE_HEIGHT = 200
+const MAX_STEP_HEIGHT = 80 // ignore ground hits more than this above current feet (prevents teleporting onto lamp posts)
 const BOUNDARY_RADIUS = 5500
 const POINTER_SPEED = 1.0 // multiplier on default sensitivity (1.0 = default)
 const PITCH_LIMIT = 85 * (Math.PI / 180) // 85 degrees in radians
@@ -37,6 +38,7 @@ export default function FPSControls({ forestScene, onLockChange }) {
   const right = useRef(new THREE.Vector3())
   const moveDir = useRef(new THREE.Vector3())
   const rayOrigin = useRef(new THREE.Vector3())
+  const prevPosition = useRef(new THREE.Vector3())
 
   // Cache meshes when forest scene changes (avoid per-frame traverse)
   const meshCache = useRef([])
@@ -99,7 +101,7 @@ export default function FPSControls({ forestScene, onLockChange }) {
     keys.current = { w: false, a: false, s: false, d: false, shift: false }
   }, [onLockChange])
 
-  // Ground raycast helper
+  // Ground raycast helper — finds the walkable surface, skipping roofs/canopies above
   const getGroundHeight = useCallback((x, z) => {
     if (!forestScene) return null
 
@@ -108,10 +110,21 @@ export default function FPSControls({ forestScene, onLockChange }) {
     raycaster.current.far = RAY_LENGTH + RAY_ORIGIN_OFFSET
 
     const intersects = raycaster.current.intersectObjects(meshCache.current, false)
-    if (intersects.length > 0) {
-      // Return the closest hit below the player (highest ground point)
-      return intersects[0].point.y
+    if (intersects.length === 0) return null
+
+    // Hits are sorted top-to-bottom (highest Y first).
+    // Find the highest surface that's within step range of our feet.
+    // This lets us walk UNDER lamp posts, trees, and roofs.
+    const feetY = camera.position.y - EYE_HEIGHT
+    const maxWalkableY = feetY + MAX_STEP_HEIGHT
+
+    for (let i = 0; i < intersects.length; i++) {
+      if (intersects[i].point.y <= maxWalkableY) {
+        return intersects[i].point.y
+      }
     }
+
+    // All hits are above us (under a tall structure) — no walkable ground found
     return null
   }, [forestScene, camera])
 
@@ -137,6 +150,9 @@ export default function FPSControls({ forestScene, onLockChange }) {
     if (keys.current.s) moveDir.current.sub(forward.current)
     if (keys.current.a) moveDir.current.sub(right.current)
     if (keys.current.d) moveDir.current.add(right.current)
+
+    // Save position before moving (for reverting if we walk into void)
+    prevPosition.current.copy(camera.position)
 
     if (moveDir.current.lengthSq() > 0) {
       moveDir.current.normalize()
@@ -169,13 +185,12 @@ export default function FPSControls({ forestScene, onLockChange }) {
         isGrounded.current = true
       }
     } else {
-      // No ground found — use last known ground height
-      const targetY = lastGroundY.current + EYE_HEIGHT
-      if (camera.position.y <= targetY) {
-        camera.position.y = targetY
-        velocity.current.y = 0
-        isGrounded.current = true
-      }
+      // No ground found — revert to previous position (don't walk into void)
+      camera.position.x = prevPosition.current.x
+      camera.position.z = prevPosition.current.z
+      camera.position.y = prevPosition.current.y
+      velocity.current.y = 0
+      isGrounded.current = true
     }
   })
 

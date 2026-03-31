@@ -12,6 +12,16 @@ export default function Diorama({ onSceneReady }) {
     })
   }, [actions])
 
+  // Adjust floating objects in the scene
+  useEffect(() => {
+    if (!scene) return
+    const temple = scene.getObjectByName('Temple')
+    if (temple) {
+      // Temple floats ~80 units above ground — lower it so steps touch the ground
+      temple.position.y -= 70
+    }
+  }, [scene])
+
   useEffect(() => {
     if (scene && onSceneReady) {
       onSceneReady(scene)
