@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import ReefScene from './scene/ReefScene'
+import LandingScreen from './ui/LandingScreen'
+import ControlsHUD from './ui/ControlsHUD'
 import OverlayPanel from './ui/OverlayPanel'
 import About from './content/About'
 import Projects from './content/Projects'
@@ -17,7 +19,20 @@ const CONTENT_MAP = {
 }
 
 export default function App() {
+  const [isLocked, setIsLocked] = useState(false)
   const [activeSection, setActiveSection] = useState(null)
+
+  const handleLockChange = useCallback((locked) => {
+    setIsLocked(locked)
+  }, [])
+
+  const handleEnter = useCallback(() => {
+    // PointerLockControls.lock() must be called from a user gesture.
+    // Clicking the canvas triggers pointer lock via the controls' built-in
+    // click-to-lock behavior. We dispatch a click on the canvas element.
+    const canvas = document.querySelector('canvas')
+    if (canvas) canvas.click()
+  }, [])
 
   const handleCoralClick = (sectionId) => {
     setActiveSection(sectionId)
@@ -35,8 +50,12 @@ export default function App() {
         camera={{ position: [-309, 300, -4643], fov: 60, near: 1, far: 50000 }}
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
-        <ReefScene onCoralClick={handleCoralClick} />
+        <ReefScene onLockChange={handleLockChange} />
       </Canvas>
+
+      {!isLocked && <LandingScreen onEnter={handleEnter} />}
+
+      <ControlsHUD isLocked={isLocked} />
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}
