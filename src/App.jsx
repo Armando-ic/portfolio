@@ -47,7 +47,7 @@ export default function App() {
   return (
     <>
       <Canvas
-        camera={{ position: [-309, 300, -4643], fov: 60, near: 1, far: 50000 }}
+        camera={{ position: [3064, 375, -4366], fov: 60, near: 1, far: 50000 }}
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
         <ReefScene onLockChange={handleLockChange} />
@@ -56,6 +56,15 @@ export default function App() {
       {!isLocked && <LandingScreen onEnter={handleEnter} />}
 
       <ControlsHUD isLocked={isLocked} />
+
+      {isLocked && (
+        <div id="debug-pos" style={{
+          position: 'fixed', top: '1rem', left: '1rem', zIndex: 150,
+          color: '#0f0', fontFamily: 'monospace', fontSize: '14px',
+          background: 'rgba(0,0,0,0.6)', padding: '4px 8px', borderRadius: '4px',
+          pointerEvents: 'none'
+        }} />
+      )}
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}
