@@ -28,24 +28,24 @@ export default function Resume() {
       </div>
 
       <h2>Certifications</h2>
-      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>CompTIA Security+</strong> (SY0-601) — September 2022</p>
+      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>CompTIA Security+</strong> (SY0-601) — September 2022 · Expires Sep 2026, earning CEUs for renewal</p>
       <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>CompTIA Network+</strong> — In Progress</p>
 
       <h2>Technical Skills</h2>
       <div className="resume-skills-grid">
         <div><strong>Cloud:</strong> GCP, Firebase, Azure Sentinel</div>
         <div><strong>Languages:</strong> Python, JavaScript, Java, HTML/CSS, SQL</div>
-        <div><strong>Frameworks:</strong> Flask, Tailwind CSS, Stripe API, Google Maps API</div>
+        <div><strong>Frameworks:</strong> Flask, Three.js, React Three Fiber, Tailwind CSS, Stripe API, Google Maps API</div>
         <div><strong>DevOps:</strong> Git/GitHub, gcloud CLI, Firebase CLI, Firestore security rules</div>
         <div><strong>Networking:</strong> Cisco Packet Tracer, VLSM, static routing</div>
-        <div><strong>AI Tools:</strong> Claude Code (agentic workflows, MCP, automated QA)</div>
+        <div><strong>Tools:</strong> Blender, Claude Code (agentic workflows, MCP, automated QA)</div>
       </div>
 
       <h2>Experience</h2>
       <div className="resume-entry">
         <div className="resume-entry-header">
           <h3>Cloud Systems Developer & Communications Manager</h3>
-          <span className="resume-date">Jan 2026 – Present</span>
+          <span className="resume-date">Jan 2026 – Apr 2026</span>
         </div>
         <div className="resume-subtitle">Lola's Party Co. — GMU IT-493 Senior Design Project</div>
         <ul>
@@ -60,7 +60,7 @@ export default function Resume() {
       <div className="resume-entry">
         <div className="resume-entry-header">
           <h3>Line Cook / Dishwasher / Server</h3>
-          <span className="resume-date">Mar 2022 – Present</span>
+          <span className="resume-date">Mar 2022 – Mar 2024</span>
         </div>
         <div className="resume-subtitle">Brixx Wood Fired Pizza + Craft Bar</div>
         <ul>
@@ -72,6 +72,18 @@ export default function Resume() {
       <h2>Projects</h2>
       <div className="resume-entry">
         <div className="resume-entry-header">
+          <h3>3D Server Room Portfolio</h3>
+          <span className="resume-date">React Three Fiber + Blender</span>
+        </div>
+        <ul>
+          <li>Built an interactive 3D first-person portfolio set in a walkable server room environment</li>
+          <li>Implemented FPS controls with ground raycasting, collision detection, and billboard content system</li>
+          <li>Integrated ambient audio, volume controls, and flat portfolio fallback page</li>
+          <li>Assembled 3D models from Sketchfab in Blender, built with Claude Code assistance</li>
+        </ul>
+      </div>
+      <div className="resume-entry">
+        <div className="resume-entry-header">
           <h3>Lola's Party System</h3>
           <span className="resume-date">Full-Stack Cloud App</span>
         </div>
@@ -79,15 +91,6 @@ export default function Resume() {
           <li>Built a production web app for a party rental business serving Northern Virginia</li>
           <li>5-step booking wizard, e-commerce page, admin dashboard, Google Maps delivery fees</li>
           <li>Wrote Firestore/Storage security rules, pinned dependencies, scrubbed secrets from history</li>
-        </ul>
-      </div>
-      <div className="resume-entry">
-        <div className="resume-entry-header">
-          <h3>Azure Sentinel SIEM Lab</h3>
-          <span className="resume-date">Sep 2023</span>
-        </div>
-        <ul>
-          <li>PowerShell metadata extraction, Azure Log Analytics ingestion, global RDP attack visualization</li>
         </ul>
       </div>
       <div className="resume-entry">

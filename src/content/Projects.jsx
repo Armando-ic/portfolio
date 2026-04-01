@@ -2,6 +2,22 @@ export default function Projects() {
   return (
     <div>
       <div className="project-card">
+        <h3>3D Server Room Portfolio</h3>
+        <div className="tags">
+          <span className="tag">React</span>
+          <span className="tag tag--blue">Three.js</span>
+          <span className="tag tag--blue">React Three Fiber</span>
+          <span className="tag tag--purple">Blender</span>
+          <span className="tag">Vite</span>
+          <span className="tag tag--purple">Claude Code</span>
+        </div>
+        <p>Interactive 3D portfolio built as a first-person walkable server room. Features FPS controls (WASD + mouse look + jump), billboard content labels on server racks, ambient server audio with footstep sounds, volume controls, and a flat portfolio fallback page. 3D models sourced from Sketchfab, assembled and customized in Blender. Built with assistance from Claude Code.</p>
+        <div className="project-links">
+          <a href="https://github.com/Armando-ic/portfolio" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+        </div>
+      </div>
+
+      <div className="project-card">
         <h3>Lola's Party System</h3>
         <div className="tags">
           <span className="tag">Python</span>
@@ -15,20 +31,6 @@ export default function Projects() {
         <div className="project-links">
           <a href="https://lolas-party-system.web.app" target="_blank" rel="noopener noreferrer">Live Site &rarr;</a>
           <a href="https://github.com/Armando-ic/DMV_SoftPlayRentals_IT-493_Team5" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
-        </div>
-      </div>
-
-      <div className="project-card">
-        <h3>Azure Sentinel SIEM Lab</h3>
-        <div className="tags">
-          <span className="tag tag--blue">Azure</span>
-          <span className="tag tag--purple">PowerShell</span>
-          <span className="tag">SIEM</span>
-          <span className="tag">Log Analytics</span>
-        </div>
-        <p>Built a security monitoring lab using Azure Sentinel. Extracted Windows Event Viewer metadata via PowerShell, ingested geolocation-enriched logs into Log Analytics, and visualized global RDP brute force attacks on an interactive world map.</p>
-        <div className="project-links">
-          <span style={{ color: '#64748b', fontSize: '0.8rem' }}>Sep 2023</span>
         </div>
       </div>
 
