@@ -19,7 +19,7 @@ export default function FlatPortfolio({ onBack }) {
       <header className="flat-header">
         <div className="flat-header-content">
           <div>
-            <h1 className="flat-name">Armando Interiano</h1>
+            <h1 className="flat-name">Armando Irizarry-Cortes</h1>
             <p className="flat-tagline">IT & Cybersecurity Portfolio</p>
           </div>
           <nav className="flat-nav">
@@ -50,7 +50,7 @@ export default function FlatPortfolio({ onBack }) {
       </main>
 
       <footer className="flat-footer">
-        <p>Armando Interiano &middot; IT & Cybersecurity</p>
+        <p>Armando Irizarry-Cortes &middot; IT & Cybersecurity</p>
       </footer>
     </div>
   )

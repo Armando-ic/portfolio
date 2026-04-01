@@ -2,7 +2,7 @@ export default function LandingScreen({ onEnter, onViewPortfolio }) {
   return (
     <div className="landing-screen" onClick={(e) => e.stopPropagation()}>
       <div className="landing-content">
-        <h1 className="landing-title">Armando Interiano</h1>
+        <h1 className="landing-title">Armando Irizarry-Cortes</h1>
         <p className="landing-subtitle">IT & Cybersecurity Portfolio</p>
 
         <div className="landing-buttons">
