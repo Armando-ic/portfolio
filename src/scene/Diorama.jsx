@@ -12,7 +12,7 @@ export default function Diorama({ onSceneReady }) {
     })
   }, [actions])
 
-useEffect(() => {
+  useEffect(() => {
     if (scene && onSceneReady) {
       onSceneReady(scene)
     }

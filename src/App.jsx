@@ -25,6 +25,11 @@ export default function App() {
   const [isMoving, setIsMoving] = useState(false)
   const [masterVolume, setMasterVolume] = useState(0.5)
   const [activeSection, setActiveSection] = useState(null)
+  const [expandedSection, setExpandedSection] = useState(null)
+
+  const handleSectionChange = useCallback((sectionId) => {
+    setExpandedSection(sectionId)
+  }, [])
 
   const blockNextLock = useRef(false)
 
@@ -82,22 +87,14 @@ export default function App() {
           pointerEvents: isLocked ? 'auto' : 'none',
         }}
       >
-        <ReefScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} />
+        <ReefScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} />
       </Canvas>
 
       {!hasEntered && <LandingScreen onEnter={handleEnter} />}
 
       <ControlsHUD isLocked={isLocked} hasEntered={hasEntered} masterVolume={masterVolume} onVolumeChange={setMasterVolume} onResume={handleResume} onExit={handleExit} />
-      <AudioManager isLocked={isLocked} isMoving={isMoving} masterVolume={masterVolume} />
+      <AudioManager isLocked={isLocked} isMoving={isMoving} masterVolume={masterVolume} expandedSection={expandedSection} />
 
-      {isLocked && (
-        <div id="debug-pos" style={{
-          position: 'fixed', top: '1rem', left: '1rem', zIndex: 150,
-          color: '#0f0', fontFamily: 'monospace', fontSize: '14px',
-          background: 'rgba(0,0,0,0.6)', padding: '4px 8px', borderRadius: '4px',
-          pointerEvents: 'none'
-        }} />
-      )}
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}

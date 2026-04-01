@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 const AMBIENT_BASE = 0.05
 const FOOTSTEPS_BASE = 0.1
 
-export default function AudioManager({ isLocked, isMoving, masterVolume }) {
+export default function AudioManager({ isLocked, isMoving, masterVolume, expandedSection }) {
   const ambientRef = useRef(null)
   const footstepsRef = useRef(null)
 
@@ -31,19 +31,20 @@ export default function AudioManager({ isLocked, isMoving, masterVolume }) {
     if (footstepsRef.current) footstepsRef.current.volume = FOOTSTEPS_BASE * masterVolume
   }, [masterVolume])
 
-  // Ambient: play when locked, pause on landing screen
+  // Ambient: play when in scene (locked OR viewing a panel), pause on landing screen
+  const inScene = isLocked || !!expandedSection
   useEffect(() => {
     const ambient = ambientRef.current
     if (!ambient) return
 
-    if (isLocked) {
+    if (inScene) {
       ambient.play().catch(() => {})
     } else {
       ambient.pause()
     }
-  }, [isLocked])
+  }, [inScene])
 
-  // Footsteps: play when moving, pause when stopped
+  // Footsteps: play when moving, pause when stopped or viewing panel
   useEffect(() => {
     const footsteps = footstepsRef.current
     if (!footsteps) return

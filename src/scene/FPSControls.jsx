@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
 import { PointerLockControls } from '@react-three/drei'
 import * as THREE from 'three'
+import { RACK_SECTIONS, INTERACT_DISTANCE } from './RackBillboard'
 
 // --- Tunable constants ---
 const MOVE_SPEED = 2.0
@@ -29,21 +30,16 @@ function classifyMesh(mesh) {
   return 'solid'
 }
 
-// Debug position display
-function useDebugPosition(camera) {
-  useFrame(() => {
-    const el = document.getElementById('debug-pos')
-    if (el) {
-      el.textContent = `X: ${camera.position.x.toFixed(3)}  Y: ${camera.position.y.toFixed(3)}  Z: ${camera.position.z.toFixed(3)}`
-    }
-  })
-}
-
-export default function FPSControls({ forestScene, onLockChange, onMovingChange, enabled = true }) {
+export default function FPSControls({ forestScene, onLockChange, onMovingChange, onInteract, expandedSection, enabled = true }) {
   const controlsRef = useRef()
   const { camera } = useThree()
-  useDebugPosition(camera)
   const wasMoving = useRef(false)
+  const onInteractRef = useRef(onInteract)
+  const expandedSectionRef = useRef(expandedSection)
+  onInteractRef.current = onInteract
+  expandedSectionRef.current = expandedSection
+  const cameraRef = useRef(camera)
+  cameraRef.current = camera
 
   // Movement state
   const keys = useRef({ w: false, a: false, s: false, d: false, shift: false })
@@ -76,9 +72,42 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
     walkableMeshes.current = meshes
   }, [forestScene])
 
+  // Unlock pointer when a panel is expanded, re-lock when closed
+  useEffect(() => {
+    if (expandedSection) {
+      // Panel opened — unlock pointer so user can interact with form
+      document.exitPointerLock()
+    } else if (controlsRef.current && !expandedSection) {
+      // Panel closed — re-lock if we were in FPS mode
+      // Small delay to avoid the close-click re-triggering
+      setTimeout(() => {
+        const canvas = document.querySelector('canvas')
+        if (canvas) {
+          canvas.style.pointerEvents = 'auto'
+          canvas.click()
+        }
+      }, 100)
+    }
+  }, [expandedSection])
+
   // Key handlers
   useEffect(() => {
     const onKeyDown = (e) => {
+      // When a panel is expanded, only listen for Escape to close
+      // (E is too common a letter — don't close while typing in form fields)
+      if (expandedSectionRef.current) {
+        const tag = document.activeElement?.tagName
+        const isTyping = tag === 'INPUT' || tag === 'TEXTAREA'
+        if (e.code === 'Escape') {
+          if (onInteractRef.current) onInteractRef.current(null)
+          e.preventDefault()
+        } else if (e.code === 'KeyE' && !isTyping) {
+          if (onInteractRef.current) onInteractRef.current(null)
+          e.preventDefault()
+        }
+        return // Block all other keys so typing works in form fields
+      }
+
       switch (e.code) {
         case 'KeyW': keys.current.w = true; break
         case 'KeyA': keys.current.a = true; break
@@ -92,6 +121,25 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
             isGrounded.current = false
           }
           e.preventDefault()
+          break
+        case 'KeyE':
+          // Find nearest rack within interact distance
+          {
+            const cam = cameraRef.current
+            let nearest = null
+            let nearestDist = INTERACT_DISTANCE
+            for (const section of RACK_SECTIONS) {
+              const pos = new THREE.Vector3(...section.position)
+              const dist = cam.position.distanceTo(pos)
+              if (dist < nearestDist) {
+                nearestDist = dist
+                nearest = section
+              }
+            }
+            if (nearest && onInteractRef.current) {
+              onInteractRef.current(nearest.id)
+            }
+          }
           break
       }
     }
