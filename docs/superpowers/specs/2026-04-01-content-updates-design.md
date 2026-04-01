@@ -55,7 +55,7 @@ Update the portfolio content to reflect current status: add the 3D Server Room P
 - HTB Academy SOC Analyst card
 
 ### Keep:
-- CompTIA Security+ (earned) — no changes
+- CompTIA Security+ (earned) — update to note expiration September 2026, currently earning CEUs for renewal
 - CompTIA Network+ (in progress) — no changes
 
 ## 4. About.jsx
