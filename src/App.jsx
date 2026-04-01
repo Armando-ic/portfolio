@@ -47,7 +47,7 @@ export default function App() {
   return (
     <>
       <Canvas
-        camera={{ position: [3064, 375, -4366], fov: 60, near: 1, far: 50000 }}
+        camera={{ position: [0, 0.5, 0], fov: 60, near: 0.01, far: 100 }}
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
         <ReefScene onLockChange={handleLockChange} />

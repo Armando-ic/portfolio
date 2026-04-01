@@ -3,7 +3,7 @@ import { useGLTF, useAnimations, Environment } from '@react-three/drei'
 
 export default function Diorama({ onSceneReady }) {
   const groupRef = useRef()
-  const { scene, animations } = useGLTF('/models/mystical_forest_cartoon.glb')
+  const { scene, animations } = useGLTF('/models/dumbledores_office.glb')
   const { actions } = useAnimations(animations, groupRef)
 
   useEffect(() => {
@@ -21,9 +21,9 @@ useEffect(() => {
   return (
     <group ref={groupRef}>
       <primitive object={scene} scale={1} />
-      <Environment preset="forest" environmentIntensity={0.6} />
+      <Environment preset="apartment" environmentIntensity={0.4} />
     </group>
   )
 }
 
-useGLTF.preload('/models/mystical_forest_cartoon.glb')
+useGLTF.preload('/models/dumbledores_office.glb')

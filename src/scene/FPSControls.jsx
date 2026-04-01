@@ -4,29 +4,27 @@ import { PointerLockControls } from '@react-three/drei'
 import * as THREE from 'three'
 
 // --- Tunable constants ---
-const MOVE_SPEED = 300
-const SPRINT_SPEED = 600
-const JUMP_FORCE = 250
-const GRAVITY = 600
-const EYE_HEIGHT = 200
-const PLAYER_RADIUS = 40 // horizontal collision radius
-const BOUNDARY_RADIUS = 5500
+const MOVE_SPEED = 0.8
+const SPRINT_SPEED = 1.6
+const JUMP_FORCE = 0.8
+const GRAVITY = 2.0
+const EYE_HEIGHT = 0.35
+const PLAYER_RADIUS = 0.08
+const BOUNDARY_RADIUS = 2.0
 const POINTER_SPEED = 1.0
 const PITCH_LIMIT = 85 * (Math.PI / 180)
-const BOUNDARY_CENTER = new THREE.Vector3(1835, 0, -260)
+const BOUNDARY_CENTER = new THREE.Vector3(0, 0, 0)
 
 // Raycasting
-const RAY_ORIGIN_OFFSET = 500
-const RAY_LENGTH = 2000
-const COLLISION_RAY_HEIGHT = 80 // cast horizontal rays from this height above feet
+const RAY_ORIGIN_OFFSET = 2
+const RAY_LENGTH = 5
+const COLLISION_RAY_HEIGHT = 0.15
 
 // --- Mesh classification by name prefix ---
-// Passthrough: walk through these, ignore for all collision/ground
-const PASSTHROUGH_PREFIXES = ['Grass', 'Ronce', 'Champi', 'Pentacle', 'CampFire']
-// Trees: canopy is passthrough, but we rely on trunk geometry for collision
-// Arbre and tree nodes contain both trunk and canopy in one mesh, so we skip them
-// for ground raycast but include them in collision
-const TREE_PREFIXES = ['Arbre', 'tree']
+// For Dumbledore's office, everything is solid (walls, furniture)
+// except fire/flame effects which should be passthrough
+const PASSTHROUGH_PREFIXES = ['fire', 'flame', 'glasslight']
+const TREE_PREFIXES = []
 
 function classifyMesh(mesh) {
   // Walk up the parent chain to find a named node
@@ -48,9 +46,20 @@ function classifyMesh(mesh) {
   return 'solid' // everything else: rocks, fences, walls, lanterns, buildings, etc.
 }
 
+// Debug position display — writes camera XYZ to a DOM element each frame
+function useDebugPosition(camera) {
+  useFrame(() => {
+    const el = document.getElementById('debug-pos')
+    if (el) {
+      el.textContent = `X: ${camera.position.x.toFixed(0)}  Y: ${camera.position.y.toFixed(0)}  Z: ${camera.position.z.toFixed(0)}`
+    }
+  })
+}
+
 export default function FPSControls({ forestScene, onLockChange }) {
   const controlsRef = useRef()
   const { camera } = useThree()
+  useDebugPosition(camera)
 
   // Movement state
   const keys = useRef({ w: false, a: false, s: false, d: false, shift: false })
