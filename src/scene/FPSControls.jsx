@@ -4,62 +4,34 @@ import { PointerLockControls } from '@react-three/drei'
 import * as THREE from 'three'
 
 // --- Tunable constants ---
-const MOVE_SPEED = 0.8
-const SPRINT_SPEED = 1.6
-const JUMP_FORCE = 0.8
-const GRAVITY = 2.0
-const EYE_HEIGHT = 0.35
-const PLAYER_RADIUS = 0.08
+const MOVE_SPEED = 0.15
+const SPRINT_SPEED = 0.3
+const JUMP_FORCE = 0.4
+const GRAVITY = 1.2
+const EYE_HEIGHT = 0.12
 const BOUNDARY_RADIUS = 2.0
 const POINTER_SPEED = 1.0
 const PITCH_LIMIT = 85 * (Math.PI / 180)
 const BOUNDARY_CENTER = new THREE.Vector3(0, 0, 0)
 
-// Raycasting
-const RAY_ORIGIN_OFFSET = 2
-const RAY_LENGTH = 5
-const COLLISION_RAY_HEIGHT = 0.15
-
 // --- Mesh classification by name prefix ---
-// For Dumbledore's office, everything is solid (walls, furniture)
-// except fire/flame effects which should be passthrough
 const PASSTHROUGH_PREFIXES = ['fire', 'flame', 'glasslight']
-const TREE_PREFIXES = []
 
 function classifyMesh(mesh) {
-  // Walk up the parent chain to find a named node
   let node = mesh
   while (node) {
     const name = node.name || ''
-    // Check passthrough
     for (const prefix of PASSTHROUGH_PREFIXES) {
       if (name.startsWith(prefix)) return 'passthrough'
     }
-    // Check tree
-    for (const prefix of TREE_PREFIXES) {
-      if (name.startsWith(prefix)) return 'tree'
-    }
-    // Ground mesh
-    if (name === 'Ground' || name.startsWith('Ground_')) return 'ground'
     node = node.parent
   }
-  return 'solid' // everything else: rocks, fences, walls, lanterns, buildings, etc.
-}
-
-// Debug position display — writes camera XYZ to a DOM element each frame
-function useDebugPosition(camera) {
-  useFrame(() => {
-    const el = document.getElementById('debug-pos')
-    if (el) {
-      el.textContent = `X: ${camera.position.x.toFixed(0)}  Y: ${camera.position.y.toFixed(0)}  Z: ${camera.position.z.toFixed(0)}`
-    }
-  })
+  return 'solid'
 }
 
 export default function FPSControls({ forestScene, onLockChange }) {
   const controlsRef = useRef()
   const { camera } = useThree()
-  useDebugPosition(camera)
 
   // Movement state
   const keys = useRef({ w: false, a: false, s: false, d: false, shift: false })
@@ -67,9 +39,8 @@ export default function FPSControls({ forestScene, onLockChange }) {
   const isGrounded = useRef(true)
   const lastGroundY = useRef(0)
 
-  // Raycasters
+  // Raycaster for ground detection
   const groundRaycaster = useRef(new THREE.Raycaster())
-  const collisionRaycaster = useRef(new THREE.Raycaster())
   const rayDown = useRef(new THREE.Vector3(0, -1, 0))
 
   // Reusable vectors
@@ -78,33 +49,19 @@ export default function FPSControls({ forestScene, onLockChange }) {
   const moveDir = useRef(new THREE.Vector3())
   const rayOrigin = useRef(new THREE.Vector3())
   const prevPosition = useRef(new THREE.Vector3())
-  const collisionOrigin = useRef(new THREE.Vector3())
-  const collisionDir = useRef(new THREE.Vector3())
 
-  // Categorized mesh caches
-  const groundMeshes = useRef([])    // only Ground — for walking on
-  const solidMeshes = useRef([])     // rocks, fences, walls, etc — block movement
-  const allWalkable = useRef([])     // ground + solid (for ground raycast — walk on top of rocks too)
+  // Mesh cache
+  const walkableMeshes = useRef([])
 
   useEffect(() => {
-    if (!forestScene) {
-      groundMeshes.current = []
-      solidMeshes.current = []
-      allWalkable.current = []
-      return
-    }
-    const ground = []
-    const solid = []
+    if (!forestScene) { walkableMeshes.current = []; return }
+    const meshes = []
     forestScene.traverse((child) => {
-      if (!child.isMesh) return
-      const category = classifyMesh(child)
-      if (category === 'ground') ground.push(child)
-      else if (category === 'solid') solid.push(child)
-      // 'passthrough' and 'tree' meshes are excluded from both lists
+      if (child.isMesh && classifyMesh(child) !== 'passthrough') {
+        meshes.push(child)
+      }
     })
-    groundMeshes.current = ground
-    solidMeshes.current = solid
-    allWalkable.current = [...ground, ...solid]
+    walkableMeshes.current = meshes
   }, [forestScene])
 
   // Key handlers
@@ -156,46 +113,24 @@ export default function FPSControls({ forestScene, onLockChange }) {
     keys.current = { w: false, a: false, s: false, d: false, shift: false }
   }, [onLockChange])
 
-  // Ground raycast — finds walkable surface below player
+  // Ground raycast
   const getGroundHeight = useCallback((x, z) => {
-    if (allWalkable.current.length === 0) return null
+    if (walkableMeshes.current.length === 0) return null
 
-    rayOrigin.current.set(x, camera.position.y + RAY_ORIGIN_OFFSET, z)
+    rayOrigin.current.set(x, camera.position.y + 0.5, z)
     groundRaycaster.current.set(rayOrigin.current, rayDown.current)
-    groundRaycaster.current.far = RAY_LENGTH + RAY_ORIGIN_OFFSET
+    groundRaycaster.current.far = 3.0
 
-    const intersects = groundRaycaster.current.intersectObjects(allWalkable.current, false)
+    const intersects = groundRaycaster.current.intersectObjects(walkableMeshes.current, false)
     if (intersects.length === 0) return null
 
-    // Return the first hit below or near our feet (highest walkable surface)
     const feetY = camera.position.y - EYE_HEIGHT
     for (let i = 0; i < intersects.length; i++) {
-      if (intersects[i].point.y <= feetY + 80) {
+      if (intersects[i].point.y <= feetY + 0.05) {
         return intersects[i].point.y
       }
     }
     return null
-  }, [camera])
-
-  // Horizontal collision check — returns true if movement is blocked
-  const checkCollision = useCallback((fromX, fromZ, toX, toZ) => {
-    if (solidMeshes.current.length === 0) return false
-
-    const dx = toX - fromX
-    const dz = toZ - fromZ
-    const dist = Math.sqrt(dx * dx + dz * dz)
-    if (dist < 0.001) return false
-
-    // Cast a ray from the old position toward the new position at chest height
-    const feetY = camera.position.y - EYE_HEIGHT
-    collisionOrigin.current.set(fromX, feetY + COLLISION_RAY_HEIGHT, fromZ)
-    collisionDir.current.set(dx / dist, 0, dz / dist)
-
-    collisionRaycaster.current.set(collisionOrigin.current, collisionDir.current)
-    collisionRaycaster.current.far = dist + PLAYER_RADIUS
-
-    const hits = collisionRaycaster.current.intersectObjects(solidMeshes.current, false)
-    return hits.length > 0 && hits[0].distance < dist + PLAYER_RADIUS
   }, [camera])
 
   // Main movement loop
@@ -203,14 +138,11 @@ export default function FPSControls({ forestScene, onLockChange }) {
     if (!controlsRef.current?.isLocked) return
 
     const dt = Math.min(delta, 0.1)
-
-    // --- Horizontal movement ---
     const speed = keys.current.shift ? SPRINT_SPEED : MOVE_SPEED
 
     camera.getWorldDirection(forward.current)
     forward.current.y = 0
     forward.current.normalize()
-
     right.current.crossVectors(forward.current, camera.up).normalize()
 
     moveDir.current.set(0, 0, 0)
@@ -223,15 +155,8 @@ export default function FPSControls({ forestScene, onLockChange }) {
 
     if (moveDir.current.lengthSq() > 0) {
       moveDir.current.normalize()
-      const newX = camera.position.x + moveDir.current.x * speed * dt
-      const newZ = camera.position.z + moveDir.current.z * speed * dt
-
-      // Check horizontal collision with solid objects
-      if (!checkCollision(camera.position.x, camera.position.z, newX, newZ)) {
-        camera.position.x = newX
-        camera.position.z = newZ
-      }
-      // If blocked, position stays where it was (slide along wall not implemented)
+      camera.position.x += moveDir.current.x * speed * dt
+      camera.position.z += moveDir.current.z * speed * dt
     }
 
     // --- Boundary enforcement ---
@@ -259,12 +184,12 @@ export default function FPSControls({ forestScene, onLockChange }) {
         isGrounded.current = true
       }
     } else {
-      // No ground found — revert to previous position
-      camera.position.x = prevPosition.current.x
-      camera.position.z = prevPosition.current.z
-      camera.position.y = prevPosition.current.y
-      velocity.current.y = 0
-      isGrounded.current = true
+      const fallbackY = lastGroundY.current + EYE_HEIGHT
+      if (camera.position.y <= fallbackY) {
+        camera.position.y = fallbackY
+        velocity.current.y = 0
+        isGrounded.current = true
+      }
     }
   })
 

@@ -34,10 +34,6 @@ export default function App() {
     if (canvas) canvas.click()
   }, [])
 
-  const handleCoralClick = (sectionId) => {
-    setActiveSection(sectionId)
-  }
-
   const handleClose = () => {
     setActiveSection(null)
   }
@@ -47,7 +43,7 @@ export default function App() {
   return (
     <>
       <Canvas
-        camera={{ position: [0, 0.5, 0], fov: 60, near: 0.01, far: 100 }}
+        camera={{ position: [0.575, 0.101, -0.177], fov: 60, near: 0.01, far: 100 }}
         style={{ position: 'fixed', top: 0, left: 0 }}
       >
         <ReefScene onLockChange={handleLockChange} />
@@ -56,15 +52,6 @@ export default function App() {
       {!isLocked && <LandingScreen onEnter={handleEnter} />}
 
       <ControlsHUD isLocked={isLocked} />
-
-      {isLocked && (
-        <div id="debug-pos" style={{
-          position: 'fixed', top: '1rem', left: '1rem', zIndex: 150,
-          color: '#0f0', fontFamily: 'monospace', fontSize: '14px',
-          background: 'rgba(0,0,0,0.6)', padding: '4px 8px', borderRadius: '4px',
-          pointerEvents: 'none'
-        }} />
-      )}
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}
