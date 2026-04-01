@@ -165,7 +165,7 @@ function RackLabel({ section, camera, expanded }) {
   )
 }
 
-export default function RackBillboards({ onSectionChange, expandedSection }) {
+export default function RackBillboards({ onSectionChange, expandedSection, visible = true }) {
   const { camera } = useThree()
 
   // Auto-close when walking away
@@ -179,6 +179,8 @@ export default function RackBillboards({ onSectionChange, expandedSection }) {
       onSectionChange(null)
     }
   })
+
+  if (!visible) return null
 
   return (
     <>

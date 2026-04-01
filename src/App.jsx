@@ -103,7 +103,7 @@ export default function App() {
           pointerEvents: isLocked ? 'auto' : 'none',
         }}
       >
-        <ReefScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} />
+        <ReefScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} hasEntered={hasEntered} />
       </Canvas>
 
       {view === 'landing' && !hasEntered && <LandingScreen onEnter={handleEnter} onViewPortfolio={handleViewPortfolio} />}
