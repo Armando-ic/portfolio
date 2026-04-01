@@ -1,4 +1,4 @@
-export default function LandingScreen({ onEnter }) {
+export default function LandingScreen({ onEnter, onViewPortfolio }) {
   return (
     <div className="landing-screen" onClick={(e) => e.stopPropagation()}>
       <div className="landing-content">
@@ -9,14 +9,9 @@ export default function LandingScreen({ onEnter }) {
           <button className="landing-btn landing-btn--primary" onClick={onEnter}>
             Enter the Server Room
           </button>
-          <a
-            className="landing-btn landing-btn--secondary"
-            href="/resume/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <button className="landing-btn landing-btn--secondary" onClick={onViewPortfolio}>
             View Portfolio
-          </a>
+          </button>
         </div>
       </div>
     </div>

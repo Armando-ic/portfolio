@@ -4,6 +4,7 @@ import ReefScene from './scene/ReefScene'
 import LandingScreen from './ui/LandingScreen'
 import ControlsHUD from './ui/ControlsHUD'
 import AudioManager from './scene/AudioManager'
+import FlatPortfolio from './ui/FlatPortfolio'
 import OverlayPanel from './ui/OverlayPanel'
 import About from './content/About'
 import Projects from './content/Projects'
@@ -20,6 +21,7 @@ const CONTENT_MAP = {
 }
 
 export default function App() {
+  const [view, setView] = useState('landing') // 'landing' | '3d' | 'flat'
   const [isLocked, setIsLocked] = useState(false)
   const [hasEntered, setHasEntered] = useState(false)
   const [isMoving, setIsMoving] = useState(false)
@@ -50,12 +52,21 @@ export default function App() {
   }, [])
 
   const handleEnter = useCallback(() => {
+    setView('3d')
     setHasEntered(true)
     const canvas = document.querySelector('canvas')
     if (canvas) {
       canvas.style.pointerEvents = 'auto'
       canvas.click()
     }
+  }, [])
+
+  const handleViewPortfolio = useCallback(() => {
+    setView('flat')
+  }, [])
+
+  const handleBackFrom3D = useCallback(() => {
+    setView('landing')
   }, [])
 
   const handleResume = useCallback(() => {
@@ -70,6 +81,7 @@ export default function App() {
     blockNextLock.current = true
     setHasEntered(false)
     setIsLocked(false)
+    setView('landing')
   }, [])
 
   const handleClose = () => {
@@ -77,6 +89,10 @@ export default function App() {
   }
 
   const ContentComponent = activeSection ? CONTENT_MAP[activeSection] : null
+
+  if (view === 'flat') {
+    return <FlatPortfolio onBack={() => setView('landing')} />
+  }
 
   return (
     <>
@@ -90,11 +106,10 @@ export default function App() {
         <ReefScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} />
       </Canvas>
 
-      {!hasEntered && <LandingScreen onEnter={handleEnter} />}
+      {view === 'landing' && !hasEntered && <LandingScreen onEnter={handleEnter} onViewPortfolio={handleViewPortfolio} />}
 
       <ControlsHUD isLocked={isLocked} hasEntered={hasEntered} masterVolume={masterVolume} onVolumeChange={setMasterVolume} onResume={handleResume} onExit={handleExit} />
       <AudioManager isLocked={isLocked} isMoving={isMoving} masterVolume={masterVolume} expandedSection={expandedSection} />
-
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}

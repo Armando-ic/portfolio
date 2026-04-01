@@ -5,6 +5,7 @@ import './styles/global.css'
 import './styles/overlay.css'
 import './styles/landing.css'
 import './styles/hud.css'
+import './styles/flat-portfolio.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
