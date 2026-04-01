@@ -76,10 +76,10 @@ export default function Resume() {
           <span className="resume-date">React Three Fiber + Blender</span>
         </div>
         <ul>
-          <li>Built an interactive 3D first-person portfolio set in a walkable server room environment</li>
-          <li>Implemented FPS controls with ground raycasting, collision detection, and billboard content system</li>
-          <li>Integrated ambient audio, volume controls, and flat portfolio fallback page</li>
-          <li>Assembled 3D models from Sketchfab in Blender, built with Claude Code assistance</li>
+          <li>Conceptualized and directed development of an interactive 3D first-person portfolio, leveraging Claude Code for AI-assisted implementation</li>
+          <li>Guided iterative development of FPS controls, ground raycasting, collision detection, and billboard content systems</li>
+          <li>Designed ambient audio integration, volume controls, and flat portfolio fallback page</li>
+          <li>Assembled 3D models from Sketchfab in Blender; managed full project lifecycle through AI-assisted workflows</li>
         </ul>
       </div>
       <div className="resume-entry">

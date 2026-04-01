@@ -11,7 +11,7 @@ export default function Projects() {
           <span className="tag">Vite</span>
           <span className="tag tag--purple">Claude Code</span>
         </div>
-        <p>Interactive 3D portfolio built as a first-person walkable server room. Features FPS controls (WASD + mouse look + jump), billboard content labels on server racks, ambient server audio with footstep sounds, volume controls, and a flat portfolio fallback page. 3D models sourced from Sketchfab, assembled and customized in Blender. Built with assistance from Claude Code.</p>
+        <p>Interactive 3D portfolio conceptualized and directed as a first-person walkable server room. Leveraged Claude Code to implement FPS controls (WASD + mouse look + jump), billboard content systems, ambient audio with footstep sounds, and post-processing effects. 3D models sourced from Sketchfab, assembled and customized in Blender. Demonstrates proficiency in AI-assisted development workflows and creative technical direction.</p>
         <div className="project-links">
           <a href="https://github.com/Armando-ic/portfolio" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
         </div>

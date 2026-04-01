@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
-import ReefScene from './scene/ReefScene'
+import ServerRoomScene from './scene/ServerRoomScene'
 import LandingScreen from './ui/LandingScreen'
 import ControlsHUD from './ui/ControlsHUD'
 import AudioManager from './scene/AudioManager'
@@ -103,7 +103,7 @@ export default function App() {
           pointerEvents: isLocked ? 'auto' : 'none',
         }}
       >
-        <ReefScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} hasEntered={hasEntered} />
+        <ServerRoomScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} hasEntered={hasEntered} />
       </Canvas>
 
       {view === 'landing' && !hasEntered && <LandingScreen onEnter={handleEnter} onViewPortfolio={handleViewPortfolio} />}
