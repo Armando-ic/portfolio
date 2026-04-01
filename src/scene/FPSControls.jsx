@@ -4,12 +4,12 @@ import { PointerLockControls } from '@react-three/drei'
 import * as THREE from 'three'
 
 // --- Tunable constants ---
-const MOVE_SPEED = 0.15
-const SPRINT_SPEED = 0.3
-const JUMP_FORCE = 0.4
-const GRAVITY = 1.2
-const EYE_HEIGHT = 0.12
-const BOUNDARY_RADIUS = 2.0
+const MOVE_SPEED = 2.0
+const SPRINT_SPEED = 4.0
+const JUMP_FORCE = 3.0
+const GRAVITY = 8.0
+const EYE_HEIGHT = 1.6
+const BOUNDARY_RADIUS = 50
 const POINTER_SPEED = 1.0
 const PITCH_LIMIT = 85 * (Math.PI / 180)
 const BOUNDARY_CENTER = new THREE.Vector3(0, 0, 0)
@@ -29,9 +29,21 @@ function classifyMesh(mesh) {
   return 'solid'
 }
 
-export default function FPSControls({ forestScene, onLockChange }) {
+// Debug position display
+function useDebugPosition(camera) {
+  useFrame(() => {
+    const el = document.getElementById('debug-pos')
+    if (el) {
+      el.textContent = `X: ${camera.position.x.toFixed(3)}  Y: ${camera.position.y.toFixed(3)}  Z: ${camera.position.z.toFixed(3)}`
+    }
+  })
+}
+
+export default function FPSControls({ forestScene, onLockChange, onMovingChange, enabled = true }) {
   const controlsRef = useRef()
   const { camera } = useThree()
+  useDebugPosition(camera)
+  const wasMoving = useRef(false)
 
   // Movement state
   const keys = useRef({ w: false, a: false, s: false, d: false, shift: false })
@@ -133,6 +145,37 @@ export default function FPSControls({ forestScene, onLockChange }) {
     return null
   }, [camera])
 
+  // Collision check — cast rays at multiple heights to catch walls/racks
+  const collisionRaycaster = useRef(new THREE.Raycaster())
+  const collisionDir = useRef(new THREE.Vector3())
+  const collisionOrigin = useRef(new THREE.Vector3())
+  const PLAYER_RADIUS = 0.3
+  const COLLISION_HEIGHTS = [0.3, 0.8, 1.4] // knee, waist, chest height
+
+  const checkCollision = useCallback((fromX, fromZ, toX, toZ) => {
+    if (walkableMeshes.current.length === 0) return false
+
+    const dx = toX - fromX
+    const dz = toZ - fromZ
+    const dist = Math.sqrt(dx * dx + dz * dz)
+    if (dist < 0.001) return false
+
+    collisionDir.current.set(dx / dist, 0, dz / dist)
+
+    const feetY = camera.position.y - EYE_HEIGHT
+    for (const h of COLLISION_HEIGHTS) {
+      collisionOrigin.current.set(fromX, feetY + h, fromZ)
+      collisionRaycaster.current.set(collisionOrigin.current, collisionDir.current)
+      collisionRaycaster.current.far = dist + PLAYER_RADIUS
+
+      const hits = collisionRaycaster.current.intersectObjects(walkableMeshes.current, false)
+      if (hits.length > 0 && hits[0].distance < dist + PLAYER_RADIUS) {
+        return true
+      }
+    }
+    return false
+  }, [camera])
+
   // Main movement loop
   useFrame((_, delta) => {
     if (!controlsRef.current?.isLocked) return
@@ -153,10 +196,22 @@ export default function FPSControls({ forestScene, onLockChange }) {
 
     prevPosition.current.copy(camera.position)
 
-    if (moveDir.current.lengthSq() > 0) {
+    const isMoving = moveDir.current.lengthSq() > 0
+    if (isMoving) {
       moveDir.current.normalize()
-      camera.position.x += moveDir.current.x * speed * dt
-      camera.position.z += moveDir.current.z * speed * dt
+      const newX = camera.position.x + moveDir.current.x * speed * dt
+      const newZ = camera.position.z + moveDir.current.z * speed * dt
+
+      if (!checkCollision(camera.position.x, camera.position.z, newX, newZ)) {
+        camera.position.x = newX
+        camera.position.z = newZ
+      }
+    }
+
+    // Report movement state changes
+    if (isMoving !== wasMoving.current) {
+      wasMoving.current = isMoving
+      if (onMovingChange) onMovingChange(isMoving)
     }
 
     // --- Boundary enforcement ---
@@ -192,6 +247,8 @@ export default function FPSControls({ forestScene, onLockChange }) {
       }
     }
   })
+
+  if (!enabled) return null
 
   return (
     <PointerLockControls

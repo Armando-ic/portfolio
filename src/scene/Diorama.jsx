@@ -3,7 +3,7 @@ import { useGLTF, useAnimations, Environment } from '@react-three/drei'
 
 export default function Diorama({ onSceneReady }) {
   const groupRef = useRef()
-  const { scene, animations } = useGLTF('/models/dumbledores_office.glb')
+  const { scene, animations } = useGLTF('/models/server_room.glb')
   const { actions } = useAnimations(animations, groupRef)
 
   useEffect(() => {
@@ -26,4 +26,4 @@ useEffect(() => {
   )
 }
 
-useGLTF.preload('/models/dumbledores_office.glb')
+useGLTF.preload('/models/server_room.glb')

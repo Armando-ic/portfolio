@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 1.5rem;
   left: 1.5rem;
-  z-index: 150;
+  z-index: 250;
   background: rgba(0, 5, 15, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -12,8 +12,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  animation: hud-fade-in 0.3s ease, hud-fade-out 0.5s ease 4.5s forwards;
-  pointer-events: none;
+  pointer-events: auto;
+}
+
+.controls-hud-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .controls-hud-row {
@@ -37,12 +42,93 @@
   border-radius: 4px;
 }
 
-@keyframes hud-fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.controls-hud-divider {
+  height: 1px;
+  background: rgba(100, 116, 139, 0.25);
+  margin: 0.35rem 0;
 }
 
-@keyframes hud-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+.controls-hud-audio-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.controls-hud-mute {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.controls-hud-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 4px;
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.controls-hud-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #0d9488;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.controls-hud-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: #0d9488;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.controls-hud-pause-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.controls-hud-btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  text-align: center;
+}
+
+.controls-hud-btn--resume {
+  background: #0d9488;
+  color: #fff;
+  border-color: #0d9488;
+}
+
+.controls-hud-btn--resume:hover {
+  background: #0f766e;
+}
+
+.controls-hud-btn--exit {
+  background: transparent;
+  color: #94a3b8;
+  border-color: rgba(100, 116, 139, 0.4);
+}
+
+.controls-hud-btn--exit:hover {
+  color: #e2e8f0;
+  border-color: rgba(100, 116, 139, 0.7);
+  background: rgba(100, 116, 139, 0.1);
 }
