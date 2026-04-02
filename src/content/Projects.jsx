@@ -30,7 +30,7 @@ export default function Projects() {
         <p>Full-stack cloud application for a party rental business. Features a 5-step booking wizard, Stripe payments, admin dashboard, automated emails, and delivery fee calculation via Google Maps API. 11 Cloud Functions, 1,400+ lines of backend logic.</p>
         <div className="project-links">
           <a href="https://lolas-party-system.web.app" target="_blank" rel="noopener noreferrer">Live Site &rarr;</a>
-          <a href="https://github.com/Armando-ic/DMV_SoftPlayRentals_IT-493_Team5" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+          <a href="https://github.com/Armando-ic/lolas-party-system" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
         </div>
       </div>
 
