@@ -45,7 +45,7 @@ const RACK_SECTIONS = [
   },
 ]
 
-function RackLabel({ section, camera, expanded }) {
+function RackLabel({ section, camera, expanded, isMobile }) {
   const groupRef = useRef()
   const [showPrompt, setShowPrompt] = useState(false)
 
@@ -97,7 +97,7 @@ function RackLabel({ section, camera, expanded }) {
                   color: '#0d9488',
                   marginTop: '6px',
                   fontFamily: 'Inter, system-ui, sans-serif',
-                }}>[E] Interact</div>
+                }}>{isMobile ? 'Interact' : '[E] Interact'}</div>
               )}
             </div>
           )}
@@ -141,7 +141,7 @@ function RackLabel({ section, camera, expanded }) {
                   fontSize: '10px',
                   color: '#64748b',
                   fontFamily: 'Inter, system-ui, sans-serif',
-                }}>[E] Close</div>
+                }}>{isMobile ? 'Close' : '[E] Close'}</div>
               </div>
               <div className="overlay-content" style={{
                 flex: 1,
@@ -165,7 +165,7 @@ function RackLabel({ section, camera, expanded }) {
   )
 }
 
-export default function RackBillboards({ onSectionChange, expandedSection, visible = true }) {
+export default function RackBillboards({ onSectionChange, expandedSection, visible = true, isMobile = false }) {
   const { camera } = useThree()
 
   // Auto-close when walking away
@@ -190,6 +190,7 @@ export default function RackBillboards({ onSectionChange, expandedSection, visib
           section={section}
           camera={camera}
           expanded={expandedSection === section.id}
+          isMobile={isMobile}
         />
       ))}
     </>
