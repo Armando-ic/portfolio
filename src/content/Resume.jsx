@@ -78,7 +78,7 @@ export default function Resume() {
         <ul>
           <li>Conceptualized and directed development of an interactive 3D first-person portfolio, leveraging Claude Code for AI-assisted implementation</li>
           <li>Guided iterative development of FPS controls, ground raycasting, collision detection, and billboard content systems</li>
-          <li>Designed ambient audio integration, volume controls, and flat portfolio fallback page</li>
+          <li>Implemented mobile touch support with virtual joystick, touch-drag camera, and landscape orientation enforcement</li>
           <li>Assembled 3D models from Sketchfab in Blender; managed full project lifecycle through AI-assisted workflows</li>
         </ul>
       </div>
