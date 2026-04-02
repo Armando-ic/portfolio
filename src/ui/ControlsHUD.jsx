@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 
-export default function ControlsHUD({ isLocked, hasEntered, masterVolume, onVolumeChange, onResume, onExit }) {
+export default function ControlsHUD({ isLocked, hasEntered, masterVolume, onVolumeChange, onResume, onExit, isMobile = false }) {
   const [muted, setMuted] = useState(false)
   const lastVolume = useRef(masterVolume || 0.5)
 
@@ -28,15 +28,19 @@ export default function ControlsHUD({ isLocked, hasEntered, masterVolume, onVolu
 
   return (
     <div className="controls-hud">
-      <div className="controls-hud-section">
-        <div className="controls-hud-row"><kbd>W A S D</kbd> Move</div>
-        <div className="controls-hud-row"><kbd>Mouse</kbd> Look</div>
-        <div className="controls-hud-row"><kbd>Shift</kbd> Sprint</div>
-        <div className="controls-hud-row"><kbd>Space</kbd> Jump</div>
-        <div className="controls-hud-row"><kbd>E</kbd> Interact</div>
-        <div className="controls-hud-row"><kbd>Esc</kbd> Pause</div>
-      </div>
-      <div className="controls-hud-divider" />
+      {!isMobile && (
+        <>
+          <div className="controls-hud-section">
+            <div className="controls-hud-row"><kbd>W A S D</kbd> Move</div>
+            <div className="controls-hud-row"><kbd>Mouse</kbd> Look</div>
+            <div className="controls-hud-row"><kbd>Shift</kbd> Sprint</div>
+            <div className="controls-hud-row"><kbd>Space</kbd> Jump</div>
+            <div className="controls-hud-row"><kbd>E</kbd> Interact</div>
+            <div className="controls-hud-row"><kbd>Esc</kbd> Pause</div>
+          </div>
+          <div className="controls-hud-divider" />
+        </>
+      )}
       <div className="controls-hud-audio">
         <div className="controls-hud-audio-row">
           <button className="controls-hud-mute" onClick={handleMute}>
