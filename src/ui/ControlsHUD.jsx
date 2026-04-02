@@ -41,22 +41,24 @@ export default function ControlsHUD({ isLocked, hasEntered, masterVolume, onVolu
           <div className="controls-hud-divider" />
         </>
       )}
-      <div className="controls-hud-audio">
-        <div className="controls-hud-audio-row">
-          <button className="controls-hud-mute" onClick={handleMute}>
-            {muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'}
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={muted ? 0 : (masterVolume || 0.5)}
-            onChange={handleSlider}
-            className="controls-hud-slider"
-          />
+      {!isMobile && (
+        <div className="controls-hud-audio">
+          <div className="controls-hud-audio-row">
+            <button className="controls-hud-mute" onClick={handleMute}>
+              {muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'}
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={muted ? 0 : (masterVolume || 0.5)}
+              onChange={handleSlider}
+              className="controls-hud-slider"
+            />
+          </div>
         </div>
-      </div>
+      )}
       {isPaused && (
         <>
           <div className="controls-hud-divider" />

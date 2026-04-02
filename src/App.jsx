@@ -36,8 +36,12 @@ export default function App() {
   const cameraRef = useRef(null)
 
   const handleSectionChange = useCallback((sectionId) => {
-    setExpandedSection(sectionId)
-  }, [])
+    if (isMobile) {
+      setActiveSection(sectionId)
+    } else {
+      setExpandedSection(sectionId)
+    }
+  }, [isMobile])
 
   const blockNextLock = useRef(false)
 
@@ -140,16 +144,16 @@ export default function App() {
         <MobileTouchControls
           mobileInput={mobileInput}
           cameraRef={cameraRef}
-          expandedSection={expandedSection}
+          expandedSection={activeSection}
           onInteract={handleSectionChange}
           onPause={handlePause}
-          hasEntered={hasEntered}
         />
       )}
       <AudioManager isLocked={isLocked} isMoving={isMoving} masterVolume={masterVolume} expandedSection={expandedSection} />
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>
         {ContentComponent && <ContentComponent />}
+        {activeSection === 'about' && <Contact />}
       </OverlayPanel>
     </>
   )

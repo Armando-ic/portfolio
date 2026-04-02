@@ -1,47 +1,81 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
-import nipplejs from 'nipplejs'
 import { RACK_SECTIONS, INTERACT_DISTANCE } from '../scene/RackBillboard'
 import * as THREE from 'three'
 
 const TOUCH_LOOK_SPEED = 0.003
+const JOYSTICK_MAX_DIST = 50 // pixels — max drag distance for full speed
 
-export default function MobileTouchControls({ mobileInput, cameraRef, expandedSection, onInteract, onPause, hasEntered }) {
-  const joystickContainerRef = useRef(null)
+export default function MobileTouchControls({ mobileInput, cameraRef, expandedSection, onInteract, onPause }) {
   const lookTouchId = useRef(null)
   const lastLookPos = useRef({ x: 0, y: 0 })
   const [nearestRack, setNearestRack] = useState(null)
 
-  // Set up nipplejs joystick
-  useEffect(() => {
-    if (!joystickContainerRef.current) return
+  // --- Left side: custom touch joystick (same pattern as right-side look) ---
+  const joystickTouchId = useRef(null)
+  const joystickStart = useRef({ x: 0, y: 0 })
+  const [joystickPos, setJoystickPos] = useState(null) // { ox, oy, cx, cy } for visual
 
-    const joystick = nipplejs.create({
-      zone: joystickContainerRef.current,
-      mode: 'dynamic',
-      position: { left: '50%', top: '50%' },
-      color: 'rgba(13, 148, 136, 0.5)',
-      size: 120,
-      restOpacity: 0.3,
-      fadeTime: 200,
-    })
+  const handleJoystickStart = useCallback((e) => {
+    if (joystickTouchId.current !== null) return
+    const touch = e.changedTouches[0]
+    joystickTouchId.current = touch.identifier
+    joystickStart.current = { x: touch.clientX, y: touch.clientY }
+    setJoystickPos({ ox: touch.clientX, oy: touch.clientY, cx: touch.clientX, cy: touch.clientY })
+    e.preventDefault()
+  }, [])
 
-    joystick.on('move', (_, data) => {
-      if (!data.direction) return
-      const force = Math.min(data.force, 1)
-      const rad = data.angle.radian
-      mobileInput.current.moveX = Math.cos(rad) * force // left-right (cos: right=1, left=-1)
-      mobileInput.current.moveZ = Math.sin(rad) * force // forward-back (sin: up=1=forward)
-    })
+  const handleJoystickMove = useCallback((e) => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      const touch = e.changedTouches[i]
+      if (touch.identifier !== joystickTouchId.current) continue
 
-    joystick.on('end', () => {
-      mobileInput.current.moveX = 0
-      mobileInput.current.moveZ = 0
-    })
+      const dx = touch.clientX - joystickStart.current.x
+      const dy = touch.clientY - joystickStart.current.y
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      const force = Math.min(dist / JOYSTICK_MAX_DIST, 1)
 
-    return () => joystick.destroy()
+      setJoystickPos(prev => prev ? { ...prev, cx: touch.clientX, cy: touch.clientY } : null)
+
+      if (dist > 5) { // small dead zone in pixels
+        mobileInput.current.moveX = (dx / dist) * force   // right = positive
+        mobileInput.current.moveZ = -(dy / dist) * force  // up on screen = forward = positive
+      } else {
+        mobileInput.current.moveX = 0
+        mobileInput.current.moveZ = 0
+      }
+    }
+    e.preventDefault()
   }, [mobileInput])
 
-  // Touch-look handler (right side)
+  const handleJoystickEnd = useCallback((e) => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      if (e.changedTouches[i].identifier === joystickTouchId.current) {
+        joystickTouchId.current = null
+        mobileInput.current.moveX = 0
+        mobileInput.current.moveZ = 0
+        setJoystickPos(null)
+      }
+    }
+  }, [mobileInput])
+
+  // Left-side touch listeners
+  const leftRef = useRef(null)
+  useEffect(() => {
+    const el = leftRef.current
+    if (!el) return
+    el.addEventListener('touchstart', handleJoystickStart, { passive: false })
+    el.addEventListener('touchmove', handleJoystickMove, { passive: false })
+    el.addEventListener('touchend', handleJoystickEnd, { passive: false })
+    el.addEventListener('touchcancel', handleJoystickEnd, { passive: false })
+    return () => {
+      el.removeEventListener('touchstart', handleJoystickStart)
+      el.removeEventListener('touchmove', handleJoystickMove)
+      el.removeEventListener('touchend', handleJoystickEnd)
+      el.removeEventListener('touchcancel', handleJoystickEnd)
+    }
+  }, [handleJoystickStart, handleJoystickMove, handleJoystickEnd])
+
+  // --- Right side: touch-drag camera look ---
   const handleTouchStart = useCallback((e) => {
     if (lookTouchId.current !== null) return
     const touch = e.changedTouches[0]
@@ -122,14 +156,45 @@ export default function MobileTouchControls({ mobileInput, cameraRef, expandedSe
   const showInteractBtn = nearestRack && !expandedSection
   const showCloseBtn = !!expandedSection
 
+  // Joystick visual: teal ring + knob
+  const joystickVisual = joystickPos && (
+    <>
+      {/* Outer ring */}
+      <div style={{
+        position: 'fixed',
+        left: joystickPos.ox - 50,
+        top: joystickPos.oy - 50,
+        width: 100, height: 100,
+        borderRadius: '50%',
+        border: '2px solid rgba(13, 148, 136, 0.4)',
+        pointerEvents: 'none',
+        zIndex: 150,
+      }} />
+      {/* Knob */}
+      <div style={{
+        position: 'fixed',
+        left: joystickPos.cx - 20,
+        top: joystickPos.cy - 20,
+        width: 40, height: 40,
+        borderRadius: '50%',
+        background: 'rgba(13, 148, 136, 0.6)',
+        pointerEvents: 'none',
+        zIndex: 150,
+      }} />
+    </>
+  )
+
   return (
     <>
-      {!expandedSection && (
-        <div className="mobile-touch-overlay">
-          <div className="mobile-touch-left" ref={joystickContainerRef} />
-          <div className="mobile-touch-right" ref={rightRef} />
-        </div>
-      )}
+      <div className="mobile-touch-overlay" style={{
+        pointerEvents: expandedSection ? 'none' : 'auto',
+        visibility: expandedSection ? 'hidden' : 'visible',
+      }}>
+        <div className="mobile-touch-left" ref={leftRef} />
+        <div className="mobile-touch-right" ref={rightRef} />
+      </div>
+
+      {joystickVisual}
 
       {showInteractBtn && (
         <button className="mobile-interact-btn" onClick={handleInteract}>
@@ -143,11 +208,11 @@ export default function MobileTouchControls({ mobileInput, cameraRef, expandedSe
         </button>
       )}
 
-      {!expandedSection && (
-        <button className="mobile-pause-btn" onClick={onPause}>
-          ⏸
-        </button>
-      )}
+      <button className="mobile-pause-btn" onClick={onPause} style={{
+        display: expandedSection ? 'none' : 'flex',
+      }}>
+        ⏸
+      </button>
     </>
   )
 }
