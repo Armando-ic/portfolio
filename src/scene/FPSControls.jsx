@@ -30,7 +30,7 @@ function classifyMesh(mesh) {
   return 'solid'
 }
 
-export default function FPSControls({ forestScene, onLockChange, onMovingChange, onInteract, expandedSection, enabled = true }) {
+export default function FPSControls({ forestScene, onLockChange, onMovingChange, onInteract, expandedSection, enabled = true, isMobile = false, mobileInput }) {
   const controlsRef = useRef()
   const { camera } = useThree()
   const wasMoving = useRef(false)
@@ -40,6 +40,9 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
   expandedSectionRef.current = expandedSection
   const cameraRef = useRef(camera)
   cameraRef.current = camera
+
+  // Mobile camera rotation state
+  const euler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'))
 
   // Movement state
   const keys = useRef({ w: false, a: false, s: false, d: false, shift: false })
@@ -89,6 +92,13 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
       }, 100)
     }
   }, [expandedSection])
+
+  // On mobile, immediately report as "locked" since there's no pointer lock
+  useEffect(() => {
+    if (isMobile && enabled && onLockChange) {
+      onLockChange(true)
+    }
+  }, [isMobile, enabled, onLockChange])
 
   // Key handlers
   useEffect(() => {
@@ -226,10 +236,28 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
 
   // Main movement loop
   useFrame((_, delta) => {
-    if (!controlsRef.current?.isLocked) return
+    // Desktop: check pointer lock. Mobile: always active when enabled.
+    if (!isMobile && !controlsRef.current?.isLocked) return
+    if (isMobile && !enabled) return
 
     const dt = Math.min(delta, 0.1)
-    const speed = keys.current.shift ? SPRINT_SPEED : MOVE_SPEED
+
+    // --- Mobile camera look ---
+    if (isMobile && mobileInput?.current) {
+      const lookX = mobileInput.current.lookDeltaX
+      const lookY = mobileInput.current.lookDeltaY
+      if (lookX !== 0 || lookY !== 0) {
+        euler.current.setFromQuaternion(camera.quaternion)
+        euler.current.y -= lookX
+        euler.current.x -= lookY
+        euler.current.x = Math.max(-PITCH_LIMIT, Math.min(PITCH_LIMIT, euler.current.x))
+        camera.quaternion.setFromEuler(euler.current)
+        mobileInput.current.lookDeltaX = 0
+        mobileInput.current.lookDeltaY = 0
+      }
+    }
+
+    const speed = (!isMobile && keys.current.shift) ? SPRINT_SPEED : MOVE_SPEED
 
     camera.getWorldDirection(forward.current)
     forward.current.y = 0
@@ -237,10 +265,20 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
     right.current.crossVectors(forward.current, camera.up).normalize()
 
     moveDir.current.set(0, 0, 0)
-    if (keys.current.w) moveDir.current.add(forward.current)
-    if (keys.current.s) moveDir.current.sub(forward.current)
-    if (keys.current.a) moveDir.current.sub(right.current)
-    if (keys.current.d) moveDir.current.add(right.current)
+    if (isMobile && mobileInput?.current) {
+      // Joystick: moveZ = forward/back, moveX = left/right
+      const mx = mobileInput.current.moveX
+      const mz = mobileInput.current.moveZ
+      if (Math.abs(mx) > 0.1 || Math.abs(mz) > 0.1) {
+        moveDir.current.addScaledVector(forward.current, mz)
+        moveDir.current.addScaledVector(right.current, mx)
+      }
+    } else {
+      if (keys.current.w) moveDir.current.add(forward.current)
+      if (keys.current.s) moveDir.current.sub(forward.current)
+      if (keys.current.a) moveDir.current.sub(right.current)
+      if (keys.current.d) moveDir.current.add(right.current)
+    }
 
     prevPosition.current.copy(camera.position)
 
@@ -297,6 +335,9 @@ export default function FPSControls({ forestScene, onLockChange, onMovingChange,
   })
 
   if (!enabled) return null
+
+  // Mobile: no pointer lock controls needed
+  if (isMobile) return null
 
   return (
     <PointerLockControls
