@@ -119,8 +119,6 @@ export default function MobileTouchControls({ mobileInput, cameraRef, expandedSe
     }
   }, [expandedSection, nearestRack, onInteract])
 
-  if (!hasEntered) return null
-
   const showInteractBtn = nearestRack && !expandedSection
   const showCloseBtn = !!expandedSection
 

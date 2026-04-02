@@ -136,7 +136,7 @@ export default function App() {
       {view === 'landing' && !hasEntered && <LandingScreen onEnter={handleEnter} onViewPortfolio={handleViewPortfolio} isMobile={isMobile} />}
 
       <ControlsHUD isLocked={isLocked} hasEntered={hasEntered} masterVolume={masterVolume} onVolumeChange={setMasterVolume} onResume={handleResume} onExit={handleExit} isMobile={isMobile} />
-      {isMobile && (
+      {isMobile && hasEntered && (
         <MobileTouchControls
           mobileInput={mobileInput}
           cameraRef={cameraRef}
