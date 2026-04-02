@@ -123,7 +123,7 @@ export default function App() {
         <ServerRoomScene
           onLockChange={handleLockChange}
           onMovingChange={handleMovingChange}
-          controlsEnabled={true}
+          controlsEnabled={hasEntered}
           expandedSection={expandedSection}
           onSectionChange={handleSectionChange}
           hasEntered={hasEntered}
