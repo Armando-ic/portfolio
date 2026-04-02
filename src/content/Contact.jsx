@@ -1,9 +1,12 @@
 import { useState } from 'react'
 
+const CONTACT_FUNCTION_URL = 'https://us-central1-armando-portfolio-3d.cloudfunctions.net/send_contact_email'
+
 export default function Contact() {
   const [status, setStatus] = useState(null)
+  const [sending, setSending] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const form = e.target
     const name = form.elements.name.value.trim()
@@ -20,8 +23,29 @@ export default function Contact() {
       return
     }
 
-    setStatus({ type: 'success', text: "Thanks! Message received. I'll get back to you soon." })
-    form.reset()
+    setSending(true)
+    setStatus(null)
+
+    try {
+      const res = await fetch(CONTACT_FUNCTION_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok && data.success) {
+        setStatus({ type: 'success', text: "Thanks! Message sent. I'll get back to you soon." })
+        form.reset()
+      } else {
+        setStatus({ type: 'error', text: data.error || 'Something went wrong. Please try again.' })
+      }
+    } catch {
+      setStatus({ type: 'error', text: 'Network error. Please check your connection and try again.' })
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -54,7 +78,9 @@ export default function Contact() {
           <label htmlFor="message">Message</label>
           <textarea id="message" name="message" className="form-textarea" />
         </div>
-        <button type="submit" className="btn btn-primary">Send Message</button>
+        <button type="submit" className="btn btn-primary" disabled={sending}>
+          {sending ? 'Sending...' : 'Send Message'}
+        </button>
         {status && (
           <div className={`form-status ${status.type}`}>{status.text}</div>
         )}
