@@ -51,19 +51,21 @@ export default function ServerRoomScene({ onLockChange, onMovingChange, controls
       />
       <RackBillboards expandedSection={expandedSection} onSectionChange={onSectionChange} visible={hasEntered} isMobile={isMobile} />
 
-      {/* Post-processing */}
+      {/* Post-processing — reduced on mobile for GPU performance */}
       <EffectComposer>
         <Bloom
-          intensity={0.2}
+          intensity={isMobile ? 0.1 : 0.2}
           luminanceThreshold={0.95}
           luminanceSmoothing={0.9}
           mipmapBlur
         />
-        <N8AO
-          aoRadius={0.5}
-          intensity={1.5}
-          distanceFalloff={0.5}
-        />
+        {!isMobile && (
+          <N8AO
+            aoRadius={0.5}
+            intensity={1.5}
+            distanceFalloff={0.5}
+          />
+        )}
         <Vignette eskil={false} offset={0.2} darkness={0.5} />
         <ToneMapping />
       </EffectComposer>
