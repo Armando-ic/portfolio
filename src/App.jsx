@@ -11,6 +11,8 @@ import Projects from './content/Projects'
 import Resume from './content/Resume'
 import Certifications from './content/Certifications'
 import Contact from './content/Contact'
+import useIsMobile from './hooks/useIsMobile'
+import MobileTouchControls from './ui/MobileTouchControls'
 
 const CONTENT_MAP = {
   about: About,
@@ -28,6 +30,10 @@ export default function App() {
   const [masterVolume, setMasterVolume] = useState(0.5)
   const [activeSection, setActiveSection] = useState(null)
   const [expandedSection, setExpandedSection] = useState(null)
+
+  const isMobile = useIsMobile()
+  const mobileInput = useRef({ moveX: 0, moveZ: 0, lookDeltaX: 0, lookDeltaY: 0 })
+  const cameraRef = useRef(null)
 
   const handleSectionChange = useCallback((sectionId) => {
     setExpandedSection(sectionId)
@@ -54,12 +60,14 @@ export default function App() {
   const handleEnter = useCallback(() => {
     setView('3d')
     setHasEntered(true)
-    const canvas = document.querySelector('canvas')
-    if (canvas) {
-      canvas.style.pointerEvents = 'auto'
-      canvas.click()
+    if (!isMobile) {
+      const canvas = document.querySelector('canvas')
+      if (canvas) {
+        canvas.style.pointerEvents = 'auto'
+        canvas.click()
+      }
     }
-  }, [])
+  }, [isMobile])
 
   const handleViewPortfolio = useCallback(() => {
     setView('flat')
@@ -70,11 +78,19 @@ export default function App() {
   }, [])
 
   const handleResume = useCallback(() => {
-    const canvas = document.querySelector('canvas')
-    if (canvas) {
-      canvas.style.pointerEvents = 'auto'
-      canvas.click()
+    if (isMobile) {
+      setIsLocked(true)
+    } else {
+      const canvas = document.querySelector('canvas')
+      if (canvas) {
+        canvas.style.pointerEvents = 'auto'
+        canvas.click()
+      }
     }
+  }, [isMobile])
+
+  const handlePause = useCallback(() => {
+    setIsLocked(false)
   }, [])
 
   const handleExit = useCallback(() => {
@@ -98,17 +114,38 @@ export default function App() {
     <>
       <Canvas
         camera={{ position: [0.067, 1.687, -9.083], fov: 60, near: 0.01, far: 1000 }}
+        dpr={isMobile ? Math.min(window.devicePixelRatio, 2) : undefined}
         style={{
           position: 'fixed', top: 0, left: 0,
-          pointerEvents: isLocked ? 'auto' : 'none',
+          pointerEvents: (isLocked || isMobile) ? 'auto' : 'none',
         }}
       >
-        <ServerRoomScene onLockChange={handleLockChange} onMovingChange={handleMovingChange} controlsEnabled={true} expandedSection={expandedSection} onSectionChange={handleSectionChange} hasEntered={hasEntered} />
+        <ServerRoomScene
+          onLockChange={handleLockChange}
+          onMovingChange={handleMovingChange}
+          controlsEnabled={true}
+          expandedSection={expandedSection}
+          onSectionChange={handleSectionChange}
+          hasEntered={hasEntered}
+          isMobile={isMobile}
+          mobileInput={mobileInput}
+          cameraRef={cameraRef}
+        />
       </Canvas>
 
-      {view === 'landing' && !hasEntered && <LandingScreen onEnter={handleEnter} onViewPortfolio={handleViewPortfolio} />}
+      {view === 'landing' && !hasEntered && <LandingScreen onEnter={handleEnter} onViewPortfolio={handleViewPortfolio} isMobile={isMobile} />}
 
-      <ControlsHUD isLocked={isLocked} hasEntered={hasEntered} masterVolume={masterVolume} onVolumeChange={setMasterVolume} onResume={handleResume} onExit={handleExit} />
+      <ControlsHUD isLocked={isLocked} hasEntered={hasEntered} masterVolume={masterVolume} onVolumeChange={setMasterVolume} onResume={handleResume} onExit={handleExit} isMobile={isMobile} />
+      {isMobile && (
+        <MobileTouchControls
+          mobileInput={mobileInput}
+          cameraRef={cameraRef}
+          expandedSection={expandedSection}
+          onInteract={handleSectionChange}
+          onPause={handlePause}
+          hasEntered={hasEntered}
+        />
+      )}
       <AudioManager isLocked={isLocked} isMoving={isMoving} masterVolume={masterVolume} expandedSection={expandedSection} />
 
       <OverlayPanel activeSection={activeSection} onClose={handleClose}>

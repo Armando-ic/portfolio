@@ -1,11 +1,15 @@
 import { useState, useCallback } from 'react'
+import { useThree } from '@react-three/fiber'
 import { EffectComposer, Bloom, N8AO, Vignette, ToneMapping } from '@react-three/postprocessing'
 import Diorama from './Diorama'
 import FPSControls from './FPSControls'
 import RackBillboards from './RackBillboard'
 
-export default function ServerRoomScene({ onLockChange, onMovingChange, controlsEnabled, expandedSection, onSectionChange, hasEntered }) {
+export default function ServerRoomScene({ onLockChange, onMovingChange, controlsEnabled, expandedSection, onSectionChange, hasEntered, isMobile, mobileInput, cameraRef }) {
   const [forestScene, setForestScene] = useState(null)
+
+  const { camera } = useThree()
+  if (cameraRef) cameraRef.current = camera
 
   const handleSceneReady = useCallback((scene) => {
     setForestScene(scene)
@@ -42,8 +46,10 @@ export default function ServerRoomScene({ onLockChange, onMovingChange, controls
         onInteract={onSectionChange}
         expandedSection={expandedSection}
         enabled={controlsEnabled}
+        isMobile={isMobile}
+        mobileInput={mobileInput}
       />
-      <RackBillboards expandedSection={expandedSection} onSectionChange={onSectionChange} visible={hasEntered} />
+      <RackBillboards expandedSection={expandedSection} onSectionChange={onSectionChange} visible={hasEntered} isMobile={isMobile} />
 
       {/* Post-processing */}
       <EffectComposer>
