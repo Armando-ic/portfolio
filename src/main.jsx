@@ -6,6 +6,7 @@ import './styles/overlay.css'
 import './styles/landing.css'
 import './styles/hud.css'
 import './styles/flat-portfolio.css'
+import './styles/mobile.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

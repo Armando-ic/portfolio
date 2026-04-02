@@ -1,0 +1,117 @@
+/* ============================================================
+   Mobile Touch Controls — 3D Server Room Portfolio
+   ============================================================ */
+
+.mobile-touch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+}
+
+.mobile-touch-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.mobile-touch-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.mobile-interact-btn {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  z-index: 300;
+  padding: 0.6rem 1.5rem;
+  background: rgba(13, 148, 136, 0.85);
+  color: #fff;
+  border: 1px solid rgba(13, 148, 136, 0.6);
+  border-radius: 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  pointer-events: auto;
+}
+
+.mobile-interact-btn:active {
+  transform: scale(0.95);
+}
+
+.mobile-pause-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 300;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 5, 15, 0.7);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  border-radius: 8px;
+  color: #94a3b8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.mobile-pause-btn:active {
+  background: rgba(0, 5, 15, 0.9);
+}
+
+/* Landscape orientation prompt */
+.orientation-prompt {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 5, 15, 0.95);
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, sans-serif;
+  text-align: center;
+  padding: 2rem;
+}
+
+.orientation-prompt-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: rotate-phone 2s ease-in-out infinite;
+}
+
+@keyframes rotate-phone {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg); }
+  50%, 75% { transform: rotate(90deg); }
+}
+
+.orientation-prompt-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.orientation-prompt-subtitle {
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
