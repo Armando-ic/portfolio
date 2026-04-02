@@ -3,7 +3,32 @@ dist/
 .DS_Store
 *.local
 
-# Blender backup/autosave files
+# Blender files (large binaries, not needed in repo)
+blender/
+*.blend
 *.blend1
 *.blend2
 *.blend3
+
+# Archived models (old reef/forest/office era)
+models-archive/
+
+# Reference images/screenshots
+references/
+
+# Old reef-era scene files (not used in server room)
+src/scene/Ocean.jsx
+src/scene/ReefFish.jsx
+src/scene/ReefDecor.jsx
+src/scene/Corals.jsx
+src/scene/CameraPath.jsx
+src/scene/AnimatedFish.jsx
+src/scene/Jellyfish.jsx
+src/scene/Octopus.jsx
+src/scene/Boat.jsx
+src/scene/Lighting.jsx
+
+# Old design docs (reef era, no longer relevant)
+docs/superpowers/specs/2026-03-30-*
+docs/superpowers/specs/2026-03-31-*
+docs/superpowers/plans/2026-03-30-*
