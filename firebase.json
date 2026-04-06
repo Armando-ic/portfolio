@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "portfolio-reef/dist",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",

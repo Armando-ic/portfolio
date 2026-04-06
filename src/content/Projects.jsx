@@ -35,6 +35,22 @@ export default function Projects() {
       </div>
 
       <div className="project-card">
+        <h3>AD Detection Lab</h3>
+        <div className="tags">
+          <span className="tag">Splunk</span>
+          <span className="tag tag--blue">Active Directory</span>
+          <span className="tag tag--blue">Sysmon</span>
+          <span className="tag tag--purple">MITRE ATT&CK</span>
+          <span className="tag tag--purple">Kali Linux</span>
+          <span className="tag">PowerShell</span>
+        </div>
+        <p>Blue team home lab for practicing SOC analyst workflows. Built a 4-VM Active Directory environment, simulated real-world attacks (RDP brute force, Atomic Red Team), forwarded telemetry via Sysmon to Splunk SIEM, and wrote detection queries mapped to MITRE ATT&CK. Includes analyst triage steps, 26 hands-on practice drills, and documented lessons learned from troubleshooting.</p>
+        <div className="project-links">
+          <a href="https://github.com/Armando-ic/ad-detection-lab" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+        </div>
+      </div>
+
+      <div className="project-card">
         <h3>Network Infrastructure Lab</h3>
         <div className="tags">
           <span className="tag">Cisco Packet Tracer</span>

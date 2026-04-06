@@ -8,7 +8,7 @@ export default function Resume() {
       </div>
 
       <h2>Summary</h2>
-      <p>IT professional graduating from George Mason University with a concentration in Cyber Security and hands-on experience deploying cloud infrastructure on Google Cloud Platform. CompTIA Security+ certified with practical skills in security auditing, access control, and infrastructure hardening. Currently serving as lead developer and communications manager on a client-facing capstone project.</p>
+      <p>IT professional graduating from George Mason University with a concentration in Cyber Security and hands-on experience in detection engineering, SIEM operations, and cloud infrastructure. CompTIA Security+ certified with practical skills in Splunk, Active Directory security, MITRE ATT&CK framework mapping, and infrastructure hardening. Built a blue team home lab with attack simulations and detection rules to develop SOC analyst workflows.</p>
 
       <h2>Education</h2>
       <div className="resume-entry">
@@ -33,11 +33,12 @@ export default function Resume() {
 
       <h2>Technical Skills</h2>
       <div className="resume-skills-grid">
+        <div><strong>Security & Detection:</strong> Splunk, Sysmon, MITRE ATT&CK, Atomic Red Team, Active Directory, Windows Event Logs, Kali Linux</div>
         <div><strong>Cloud:</strong> GCP, Firebase, Azure Sentinel</div>
-        <div><strong>Languages:</strong> Python, JavaScript, Java, HTML/CSS, SQL</div>
+        <div><strong>Languages:</strong> Python, JavaScript, PowerShell, SPL (Splunk), HTML/CSS, SQL</div>
         <div><strong>Frameworks:</strong> Flask, Three.js, React Three Fiber, Tailwind CSS, Stripe API, Google Maps API</div>
         <div><strong>DevOps:</strong> Git/GitHub, gcloud CLI, Firebase CLI, Firestore security rules</div>
-        <div><strong>Networking:</strong> Cisco Packet Tracer, VLSM, static routing</div>
+        <div><strong>Networking:</strong> Cisco Packet Tracer, VLSM, static routing, VirtualBox</div>
         <div><strong>Tools:</strong> Blender, Claude Code (agentic workflows, MCP, automated QA)</div>
       </div>
 
@@ -70,6 +71,18 @@ export default function Resume() {
       </div>
 
       <h2>Projects</h2>
+      <div className="resume-entry">
+        <div className="resume-entry-header">
+          <h3>AD Detection Lab</h3>
+          <span className="resume-date">Splunk + Active Directory + MITRE ATT&CK</span>
+        </div>
+        <ul>
+          <li>Built a 4-VM Active Directory home lab (Windows Server 2022, Ubuntu/Splunk, Windows 11, Kali Linux) for blue team detection engineering</li>
+          <li>Simulated attacks (RDP brute force, Atomic Red Team) and wrote Splunk detection queries mapped to MITRE ATT&CK techniques</li>
+          <li>Configured Sysmon and Splunk Universal Forwarder to collect Security, System, Application, and Sysmon telemetry</li>
+          <li>Documented analyst triage steps, false positive guidance, and 26 hands-on practice drills across Splunk and AD administration</li>
+        </ul>
+      </div>
       <div className="resume-entry">
         <div className="resume-entry-header">
           <h3>3D Server Room Portfolio</h3>
