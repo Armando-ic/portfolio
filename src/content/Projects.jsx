@@ -35,18 +35,18 @@ export default function Projects() {
       </div>
 
       <div className="project-card">
-        <h3>AD Detection Lab</h3>
+        <h3>Splunk SOC Analyst Home Lab</h3>
         <div className="tags">
-          <span className="tag">Splunk</span>
-          <span className="tag tag--blue">Active Directory</span>
+          <span className="tag">Splunk Enterprise</span>
+          <span className="tag tag--blue">SPL</span>
           <span className="tag tag--blue">Sysmon</span>
+          <span className="tag tag--purple">Universal Forwarders</span>
           <span className="tag tag--purple">MITRE ATT&CK</span>
-          <span className="tag tag--purple">Kali Linux</span>
-          <span className="tag">PowerShell</span>
+          <span className="tag">BOTSv1</span>
         </div>
-        <p>Blue team home lab for practicing SOC analyst workflows. Built a 4-VM Active Directory environment, simulated real-world attacks (RDP brute force, Atomic Red Team), forwarded telemetry via Sysmon to Splunk SIEM, and wrote detection queries mapped to MITRE ATT&CK. Includes analyst triage steps, 26 hands-on practice drills, and documented lessons learned from troubleshooting.</p>
+        <p>SOC analyst training lab spanning three real data environments: live Windows 10 and Linux Universal Forwarders with Sysmon (SwiftOnSecurity config) and expanded telemetry, a 9-dataset course CSV corpus re-ingested through a custom Python pipeline, and the public BOTSv1 dataset for multi-day incident investigation. Authored a 4-week curriculum covering SPL fundamentals, data transformation (stats, eval, rex, timechart), lookups and dashboards, scheduled alerts, and correlation searches. Detections mapped to MITRE ATT&CK with Splunk Technology Add-ons configured for correct sourcetype parsing. Enrolled concurrently in the MyDFIR SOC Analyst Training Program.</p>
         <div className="project-links">
-          <a href="https://github.com/Armando-ic/ad-detection-lab" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+          <span style={{ color: '#64748b', fontSize: '0.8rem' }}>In Progress</span>
         </div>
       </div>
 

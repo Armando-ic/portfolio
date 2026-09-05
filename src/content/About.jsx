@@ -1,11 +1,11 @@
 export default function About() {
   return (
     <div>
-      <p>I started my career in the food service industry, but I always knew technology was where I belonged. That drive led me to Northern Virginia Community College, then to George Mason University, where I'm completing my Bachelor's in Information Technology with a concentration in Cyber Security.</p>
+      <p>I started my career in the food service industry, but I always knew technology was where I belonged. That drive led me to Northern Virginia Community College, then to George Mason University, where I earned my Bachelor's in Information Technology with a concentration in Cyber Security in May 2026.</p>
 
-      <p>Today, I'm a CompTIA Security+ certified professional with hands-on experience building and securing cloud infrastructure on Google Cloud Platform. As lead developer on a capstone client project, I've deployed 11 Cloud Functions, integrated Stripe payments, and conducted full security audits — all while managing client communications and coordinating a 6-person team.</p>
+      <p>I'm pursuing SOC analyst and cyber defense roles. CompTIA Security+ ce certified through September 2029, I built and operate a Splunk SOC home lab — live Windows and Linux Universal Forwarders feeding Sysmon telemetry, the BOTSv1 incident dataset for multi-day investigations, and detections mapped to the MITRE ATT&CK framework. The lab pairs with the MyDFIR SOC Analyst Training Program for real analyst workflow practice.</p>
 
-      <p>I'm driven by the challenge of building systems that are both powerful and secure. Whether it's configuring Firestore security rules, designing booking workflows, or setting up automated email pipelines, I bring the same attention to detail and commitment to quality.</p>
+      <p>Alongside the SOC work, I serve as lead developer and communications manager on a real-world senior capstone — coordinating a 6-person team, liaising with the business sponsor, and shipping a production cloud application on Google Cloud Platform with 11 Cloud Functions, Stripe payment integration, and a full security audit covering admin auth, Firestore rules, and webhook verification. Building production systems gives me a defender's mindset: I know what to look for because I know how things are put together.</p>
 
       <div className="section-divider" />
 
@@ -17,7 +17,7 @@ export default function About() {
         <span className="tag">SQL</span>
         <span className="tag tag--blue">GCP</span>
         <span className="tag tag--blue">Firebase</span>
-        <span className="tag tag--blue">Azure Sentinel</span>
+        <span className="tag tag--purple">Splunk</span>
         <span className="tag tag--purple">Flask</span>
         <span className="tag tag--purple">Stripe API</span>
         <span className="tag">Git/GitHub</span>
@@ -46,7 +46,7 @@ export default function About() {
         <div className="timeline-item">
           <div className="timeline-dot" style={{ background: '#7c3aed' }} />
           <div>
-            <div className="timeline-year">2022</div>
+            <div className="timeline-year">2023</div>
             <div className="timeline-label">Security+</div>
           </div>
         </div>

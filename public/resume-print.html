@@ -22,7 +22,7 @@
 
     <section class="resume-section" id="summary">
       <h2>Summary</h2>
-      <p>IT professional graduating from George Mason University with a concentration in Cyber Security and hands-on experience deploying cloud infrastructure on Google Cloud Platform. CompTIA Security+ certified with practical skills in security auditing, access control, and infrastructure hardening. Currently serving as lead developer and communications manager on a client-facing capstone project — building and securing a full-stack web application with Cloud Functions, Firestore, Stripe integration, and Firebase Hosting.</p>
+      <p>BS Information Technology graduate (May 2026) from George Mason University, Cyber Security concentration, pursuing SOC analyst and cyber defense roles. CompTIA Security+ certified, shipped an AI-augmented SOC pipeline integrating Splunk SIEM, n8n SOAR, Claude Opus agentic triage, and DFIR-Iris on a 4-VM VMware lab, with MITRE ATT&amp;CK-mapped detections validated by Atomic Red Team execution. Continuing as lead developer and communications manager on a real-world capstone, deploying and securing a production cloud application on Google Cloud Platform with Cloud Functions, Firestore, Stripe integration, and webhook verification.</p>
     </section>
 
     <section class="resume-section" id="education">
@@ -48,8 +48,9 @@
     <section class="resume-section" id="certifications">
       <h2>Certifications</h2>
       <ul class="cert-list">
-        <li><strong>CompTIA Security+</strong> (SY0-601) — <span class="entry-date">September 2022</span></li>
-        <li><strong>CompTIA Network+</strong> — <span class="entry-date">In Progress</span></li>
+        <li><strong>CompTIA Security+ ce</strong> — <span class="entry-date">September 2023, renewed August 2026, valid through September 2029</span></li>
+        <li><strong>Splunk Core Certified User</strong> — <span class="entry-date">Planned</span></li>
+        <li><strong>Splunk Core Certified Power User</strong> — <span class="entry-date">Planned</span></li>
       </ul>
     </section>
 
@@ -57,7 +58,10 @@
       <h2>Technical Skills</h2>
       <div class="skills-grid">
         <div class="skill-category">
-          <strong>Cloud &amp; Infrastructure:</strong> Google Cloud Platform (Cloud Functions, Cloud Storage, Cloud Scheduler, IAM), Firebase (Hosting, Firestore, Auth, Storage Rules), Azure Sentinel
+          <strong>Cloud &amp; Infrastructure:</strong> Google Cloud Platform (Cloud Functions, Cloud Storage, Cloud Scheduler, IAM), Firebase (Hosting, Firestore, Auth, Storage Rules)
+        </div>
+        <div class="skill-category">
+          <strong>SIEM &amp; SOC Tools:</strong> Splunk Enterprise, Splunk SPL, Sysmon (SwiftOnSecurity config), Universal Forwarders, MITRE ATT&amp;CK, BOTSv1, log analysis, detection engineering, incident response
         </div>
         <div class="skill-category">
           <strong>Languages:</strong> Python, JavaScript, Java, HTML/CSS, SQL
@@ -114,6 +118,18 @@
 
     <section class="resume-section" id="projects">
       <h2>Projects</h2>
+      <div class="entry">
+        <div class="entry-header">
+          <h3>Splunk SOC Analyst Home Lab</h3>
+          <span class="entry-meta">Real Telemetry, BOTSv1, MITRE ATT&amp;CK</span>
+        </div>
+        <ul>
+          <li>Built a SOC analyst training lab across three real data environments: live Windows 10 and Linux Universal Forwarders with Sysmon (SwiftOnSecurity config) and expanded telemetry, a 9-dataset course CSV corpus re-ingested through a custom Python pipeline, and the public BOTSv1 dataset for multi-day incident investigation</li>
+          <li>Authored a 4-week progressive curriculum covering SPL fundamentals, data transformation (stats, eval, rex, timechart), lookups and dashboards, scheduled alerts, and correlation searches</li>
+          <li>Mapped detections to MITRE ATT&amp;CK techniques and deployed Splunk Technology Add-ons to ensure correct sourcetype parsing across custom datasets</li>
+          <li>Enrolled concurrently in the MyDFIR SOC Analyst Training Program (skool.com/mydfir)</li>
+        </ul>
+      </div>
       <div class="entry">
         <div class="entry-header">
           <h3>Lola's Party System</h3>

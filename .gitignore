@@ -32,3 +32,6 @@ src/scene/Lighting.jsx
 docs/superpowers/specs/2026-03-30-*
 docs/superpowers/specs/2026-03-31-*
 docs/superpowers/plans/2026-03-30-*
+
+# Firebase deploy cache
+.firebase/

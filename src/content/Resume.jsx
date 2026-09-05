@@ -8,7 +8,7 @@ export default function Resume() {
       </div>
 
       <h2>Summary</h2>
-      <p>IT professional graduating from George Mason University with a concentration in Cyber Security and hands-on experience in detection engineering, SIEM operations, and cloud infrastructure. CompTIA Security+ certified with practical skills in Splunk, Active Directory security, MITRE ATT&CK framework mapping, and infrastructure hardening. Built a blue team home lab with attack simulations and detection rules to develop SOC analyst workflows.</p>
+      <p>BS Information Technology senior at George Mason University (Cyber Security concentration, graduating May 2026), pursuing SOC analyst and cyber defense roles. CompTIA Security+ certified, currently building a Splunk SOC home lab with live Windows and Linux Universal Forwarders, Sysmon telemetry, the BOTSv1 incident dataset, and MITRE ATT&CK-mapped detections. Concurrently serving as lead developer and communications manager on a real-world senior capstone — deploying and securing a production cloud application on Google Cloud Platform with Cloud Functions, Firestore, Stripe integration, and webhook verification.</p>
 
       <h2>Education</h2>
       <div className="resume-entry">
@@ -28,13 +28,14 @@ export default function Resume() {
       </div>
 
       <h2>Certifications</h2>
-      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>CompTIA Security+</strong> (SY0-601) — September 2022 · Expires Sep 2026, earning CEUs for renewal</p>
-      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>CompTIA Network+</strong> — In Progress</p>
+      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>CompTIA Security+ ce</strong> · September 2023 · Renewed Aug 2026 · Valid through Sep 2029 · DoD 8140 IAT Level II</p>
+      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>Splunk Core Certified User</strong> — Planned</p>
+      <p style={{ fontSize: '0.8rem' }}><strong style={{ color: '#e2e8f0' }}>Splunk Core Certified Power User</strong> — Planned</p>
 
       <h2>Technical Skills</h2>
       <div className="resume-skills-grid">
-        <div><strong>Security & Detection:</strong> Splunk, Sysmon, MITRE ATT&CK, Atomic Red Team, Active Directory, Windows Event Logs, Kali Linux</div>
-        <div><strong>Cloud:</strong> GCP, Firebase, Azure Sentinel</div>
+        <div><strong>Security & Detection:</strong> Splunk Enterprise, Splunk SPL, Sysmon (SwiftOnSecurity), Universal Forwarders, MITRE ATT&CK, BOTSv1, log analysis, detection engineering, incident response</div>
+        <div><strong>Cloud:</strong> GCP, Firebase</div>
         <div><strong>Languages:</strong> Python, JavaScript, PowerShell, SPL (Splunk), HTML/CSS, SQL</div>
         <div><strong>Frameworks:</strong> Flask, Three.js, React Three Fiber, Tailwind CSS, Stripe API, Google Maps API</div>
         <div><strong>DevOps:</strong> Git/GitHub, gcloud CLI, Firebase CLI, Firestore security rules</div>
@@ -73,14 +74,14 @@ export default function Resume() {
       <h2>Projects</h2>
       <div className="resume-entry">
         <div className="resume-entry-header">
-          <h3>AD Detection Lab</h3>
-          <span className="resume-date">Splunk + Active Directory + MITRE ATT&CK</span>
+          <h3>Splunk SOC Analyst Home Lab</h3>
+          <span className="resume-date">Real Telemetry + BOTSv1 + MITRE ATT&CK</span>
         </div>
         <ul>
-          <li>Built a 4-VM Active Directory home lab (Windows Server 2022, Ubuntu/Splunk, Windows 11, Kali Linux) for blue team detection engineering</li>
-          <li>Simulated attacks (RDP brute force, Atomic Red Team) and wrote Splunk detection queries mapped to MITRE ATT&CK techniques</li>
-          <li>Configured Sysmon and Splunk Universal Forwarder to collect Security, System, Application, and Sysmon telemetry</li>
-          <li>Documented analyst triage steps, false positive guidance, and 26 hands-on practice drills across Splunk and AD administration</li>
+          <li>Built a SOC analyst training lab across three real data environments: live Windows 10 and Linux Universal Forwarders with Sysmon (SwiftOnSecurity), a 9-dataset course CSV corpus re-ingested through a custom Python pipeline, and the public BOTSv1 dataset for multi-day incident investigation</li>
+          <li>Authored a 4-week progressive curriculum covering SPL fundamentals, data transformation (stats, eval, rex, timechart), lookups and dashboards, scheduled alerts, and correlation searches</li>
+          <li>Mapped detections to MITRE ATT&CK techniques and deployed Splunk Technology Add-ons to ensure correct sourcetype parsing across custom datasets</li>
+          <li>Enrolled concurrently in the MyDFIR SOC Analyst Training Program</li>
         </ul>
       </div>
       <div className="resume-entry">
