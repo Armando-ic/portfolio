@@ -24,7 +24,7 @@ An immersive, interactive 3D portfolio built as a first-person walkable server r
 - **GCP Cloud Functions** — Contact form email backend (Python/Flask, Gmail SMTP)
 - **Firebase Hosting** — Deployment and hosting
 - **Claude Code** — AI-assisted development (agentic workflows, iterative feature implementation)
-- **Blender** — 3D model assembly and customization
+- **3D model** — "Server Room" by local.yany on Sketchfab (CC BY 4.0), used as exported; materials and lighting are adjusted in code
 
 ## Controls
 
@@ -72,7 +72,8 @@ src/
     About.jsx                # Bio, tech tags, timeline
     Projects.jsx             # Project cards
     Certifications.jsx       # Certs and progress
-    Resume.jsx               # Full resume with PDF download
+    Resume.jsx               # Resume panel with a PDF download
+    resumeData.js            # The panel's text, copied from the one-page resume
     Contact.jsx              # Contact form (wired to Cloud Function)
 ```
 
@@ -87,8 +88,14 @@ npm run dev
 
 ```bash
 npm run build
-cd .. && npx firebase deploy --only hosting --project armando-portfolio-3d
+npx firebase deploy --only hosting
 ```
+
+Run both commands from this folder. `.firebaserc` here names the Firebase project.
+
+## Credits
+
+- Server room model: ["Server Room"](https://sketchfab.com/3d-models/server-room-57a480597a20476f9f303fda4a089f86) by [local.yany](https://sketchfab.com/local.yany) on Sketchfab, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The model is used as exported.
 
 ## Author
 
