@@ -77,7 +77,7 @@ export default function Projects() {
           <span className="tag">Universal Forwarder</span>
           <span className="tag">Python</span>
         </div>
-        <p>Live Windows Event Logs and Sysmon forwarded from a Windows 10 VM to a Splunk Enterprise indexer on Linux, plus a nine-dataset course corpus re-ingested with a Python pipeline. I also designed and published a 23-lesson SOC analyst curriculum covering SPL, lookups, dashboards and alerting. The pipeline and the lessons were written with Claude Code.</p>
+        <p>Live Windows Event Logs and Sysmon forwarded from a Windows 10 VM to a Splunk Enterprise indexer, plus a nine-dataset course corpus re-ingested with a Python pipeline. I also designed and published a 23-lesson SOC analyst curriculum covering SPL, lookups, dashboards and alerting. The pipeline and the lessons were written with Claude Code.</p>
         <div className="project-links">
           <a href="https://github.com/Armando-ic/splunk-soc-training" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
         </div>
@@ -92,7 +92,7 @@ export default function Projects() {
           <span className="tag tag--purple">Stripe</span>
           <span className="tag">Team capstone</span>
         </div>
-        <p>A production booking and payments site for a party rental business, built with a six-person capstone team at George Mason. It runs on Firebase Hosting, Python Cloud Functions, Firestore and Stripe. I was the team's liaison to the business owner and kept maintaining the site after graduation.</p>
+        <p>A production booking and payments site for a party rental business, built with a six-person capstone team at George Mason. It runs on Firebase Hosting, Python Cloud Functions, Firestore and Stripe. I was the team's liaison to the business owner and kept maintaining the site after graduation, with fixes through July 2026.</p>
         <div className="project-links">
           <a href="https://lolasparty.com" target="_blank" rel="noopener noreferrer">Live Site &rarr;</a>
           <a href="https://github.com/Armando-ic/lolas-party-system" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
