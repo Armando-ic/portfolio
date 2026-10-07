@@ -34,7 +34,7 @@ export default function LandingScreen({ onEnter, onViewPortfolio, isMobile = fal
       )}
       <div className="landing-content">
         <h1 className="landing-title">Armando Irizarry-Cortes</h1>
-        <p className="landing-subtitle">IT & Cybersecurity Portfolio</p>
+        <p className="landing-subtitle">IT Infrastructure, Networking & Security</p>
 
         <div className="landing-buttons">
           <button className="landing-btn landing-btn--primary" onClick={onEnter}>

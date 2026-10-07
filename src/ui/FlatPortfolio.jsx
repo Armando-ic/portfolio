@@ -20,7 +20,7 @@ export default function FlatPortfolio({ onBack }) {
         <div className="flat-header-content">
           <div>
             <h1 className="flat-name">Armando Irizarry-Cortes</h1>
-            <p className="flat-tagline">IT & Cybersecurity Portfolio</p>
+            <p className="flat-tagline">IT Infrastructure, Networking & Security</p>
           </div>
           <nav className="flat-nav">
             {SECTIONS.map(s => (
@@ -50,7 +50,10 @@ export default function FlatPortfolio({ onBack }) {
       </main>
 
       <footer className="flat-footer">
-        <p>Armando Irizarry-Cortes &middot; IT & Cybersecurity</p>
+        <p>Armando Irizarry-Cortes &middot; IT Infrastructure, Networking & Security</p>
+        <p style={{ marginTop: '0.5rem' }}>
+          Server room model: <a href="https://sketchfab.com/3d-models/server-room-57a480597a20476f9f303fda4a089f86" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8' }}>"Server Room"</a> by <a href="https://sketchfab.com/local.yany" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8' }}>local.yany</a> on Sketchfab, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" style={{ color: '#94a3b8' }}>CC BY 4.0</a>.
+        </p>
       </footer>
     </div>
   )
