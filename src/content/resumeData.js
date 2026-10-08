@@ -28,13 +28,13 @@ export default {
   ],
   "experience": [
     {
-      "title": "Cloud Systems Developer & Communications Manager",
+      "title": "Agenda & Communications Manager",
       "date": "Jan 2026 – Present",
       "org": "Lola's Party Co.",
       "note": "GMU IT 493 Senior Design capstone client; work continued after graduation",
       "bullets": [
-        "Deployed and managed 11 Google Cloud Functions (Python/Flask) with Firestore, Cloud Storage and IAM service accounts for a production application",
-        "Audited and fixed the application's security: admin authentication, Firestore rules, XSS, CORS, cron endpoint protection and Stripe webhook verification"
+        "With the capstone team, deployed and managed 14 Google Cloud Functions (Python/Flask) with Firestore, Cloud Storage and IAM roles for a production application",
+        "With the capstone team, audited and fixed the application's security: admin authentication, Firestore rules, XSS, CORS, cron endpoint protection and Stripe webhook verification"
       ]
     },
     {
