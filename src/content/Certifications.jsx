@@ -16,7 +16,7 @@ export default function Certifications() {
           <h3>Cisco CCNA</h3>
           <span className="cert-badge cert-badge--progress">In Progress</span>
         </div>
-        <div className="cert-meta">Cisco, exam target December 2026</div>
+        <div className="cert-meta">Cisco, exam target January 2027</div>
         <p style={{ fontSize: '0.85rem' }}>Studying for the CCNA alongside my job search: routing, switching, subnetting and network fundamentals, practiced in Cisco Packet Tracer.</p>
       </div>
     </div>

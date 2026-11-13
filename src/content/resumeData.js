@@ -19,11 +19,11 @@ export default {
   "certifications": [
     {
       "name": "CompTIA Security+ ce",
-      "detail": "(DoD 8570/8140 IAT Level II), earned September 2023, valid through September 2029"
+      "detail": "earned September 2023, valid through September 2029"
     },
     {
       "name": "Cisco CCNA",
-      "detail": "(in progress, exam target December 2026)"
+      "detail": "(in progress, exam target January 2027)"
     }
   ],
   "experience": [
